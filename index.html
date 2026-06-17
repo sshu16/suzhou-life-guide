@@ -1,810 +1,507 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>苏州生活服务手册</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            background: #f5f9f6;
-            color: #2d3e3a;
-            line-height: 1.8;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>苏州生活服务手册</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f5f9f6;color:#2d3e3a;line-height:1.8}
 
-        /* ===== 顶栏 ===== */
-        .top-bar {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.88);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #e2eee8;
-            height: 56px;
-            padding: 0 18px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .top-bar .logo {
-            font-weight: 600; font-size: 17px; color: #3a7a66;
-            letter-spacing: 1px; white-space: nowrap;
-        }
-        .top-bar .logo span { color: #7ab5a0; }
-        .top-bar .back-btn {
-            font-size: 13px; color: #3a7a66; font-weight: 500;
-            padding: 4px 14px; border-radius: 20px;
-            background: #eef7f2; cursor: pointer;
-            transition: background 0.2s; display: none; border: none;
-            font-family: inherit; white-space: nowrap;
-        }
-        .top-bar .back-btn:hover { background: #dcefe4; }
-        .top-bar .back-btn.show { display: inline-block; }
-        .top-bar .spacer { flex: 1; }
+/* 顶栏 */
+.top-bar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.88);backdrop-filter:blur(12px);border-bottom:1px solid #e2eee8;height:56px;padding:0 18px;display:flex;align-items:center;gap:8px}
+.top-bar .logo{font-weight:600;font-size:17px;color:#3a7a66;letter-spacing:1px;white-space:nowrap}
+.top-bar .logo span{color:#7ab5a0}
+.top-bar .back-btn{font-size:13px;color:#3a7a66;font-weight:500;padding:4px 14px;border-radius:20px;background:#eef7f2;cursor:pointer;transition:background .2s;display:none;border:none;font-family:inherit;white-space:nowrap}
+.top-bar .back-btn:hover{background:#dcefe4}
+.top-bar .back-btn.show{display:inline-block}
+.top-bar .spacer{flex:1}
+.top-bar .btn{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #d4e4dc;background:#fff;color:#4d7a6a;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.top-bar .btn:hover{border-color:#7ab5a0;background:#eef7f2}
+.top-bar .btn.active{background:#3a7a66;color:#fff;border-color:#3a7a66}
+.top-bar .btn.primary{background:#3a7a66;color:#fff;border-color:#3a7a66}
+.top-bar .btn.primary:hover{background:#2d634f}
+.save-indicator{font-size:11px;color:#8aaa9a;display:none;align-items:center;gap:4px}
+.save-indicator.show{display:inline-flex}
+.save-indicator .dot{width:6px;height:6px;border-radius:50%;background:#7ab5a0;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-        .top-bar .action-btn {
-            font-size: 12px; padding: 5px 14px; border-radius: 20px;
-            border: 1px solid #d4e4dc; background: #fff;
-            color: #4d7a6a; cursor: pointer; transition: all 0.2s;
-            font-family: inherit; white-space: nowrap;
-        }
-        .top-bar .action-btn:hover { border-color: #7ab5a0; background: #eef7f2; }
-        .top-bar .action-btn.active { background: #3a7a66; color: #fff; border-color: #3a7a66; }
-        .top-bar .action-btn.danger { color: #b57a6a; border-color: #e8c8be; }
-        .top-bar .action-btn.danger:hover { background: #f5e4de; }
+/* Hero */
+.hero{background:linear-gradient(135deg,#d4ede2 0%,#b8dccd 50%,#a3cfbd 100%);padding:48px 24px 36px;text-align:center}
+.hero h1{font-size:28px;font-weight:700;color:#1f4d3f;margin-bottom:6px}
+.hero p{font-size:14px;color:#4d7a6a;max-width:520px;margin:0 auto}
+.hero .hint{font-size:12px;color:#5d8a78;margin-top:12px;background:rgba(255,255,255,0.5);border-radius:20px;padding:6px 16px;display:inline-block}
 
-        .save-indicator {
-            font-size: 11px; color: #8aaa9a;
-            display: none; align-items: center; gap: 4px;
-        }
-        .save-indicator.show { display: inline-flex; }
-        .save-indicator .dot {
-            width: 6px; height: 6px; border-radius: 50%; background: #7ab5a0;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+/* 容器 */
+.container{max-width:1100px;margin:0 auto;padding:24px 20px 80px}
 
-        /* ===== Hero ===== */
-        .hero {
-            background: linear-gradient(135deg, #d4ede2 0%, #b8dccd 50%, #a3cfbd 100%);
-            padding: 40px 24px 28px;
-            text-align: center;
-        }
-        .hero h1 { font-size: 26px; font-weight: 700; color: #1f4d3f; margin-bottom: 4px; }
-        .hero .hero-title-edit {
-            font-size: 26px; font-weight: 700; color: #1f4d3f;
-            border: none; background: transparent; text-align: center;
-            font-family: inherit; outline: none; width: 100%; max-width: 400px;
-            margin: 0 auto; display: block;
-        }
-        .hero .hero-title-edit:focus { background: rgba(255,255,255,0.5); border-radius: 8px; }
-        .hero p { font-size: 14px; color: #4d7a6a; max-width: 520px; margin: 0 auto; }
-        .hero .status-bar {
-            margin-top: 10px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
-        }
-        .hero .status-bar .tag {
-            font-size: 11px; background: rgba(255,255,255,0.6);
-            border-radius: 20px; padding: 3px 12px; color: #4d7a6a;
-        }
+/* 网格 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04);border:1px solid #eaf1ed;padding:22px 22px 18px;position:relative;cursor:pointer;transition:box-shadow .25s,transform .2s}
+.card:hover{box-shadow:0 6px 28px rgba(58,122,102,0.13);transform:translateY(-2px)}
+.card .icon-row{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.card .icon-badge{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.card .card-title{font-size:17px;font-weight:600;color:#1f4d3f}
+.card .card-summary{font-size:13.5px;color:#5d7a6e;margin-bottom:8px}
+.card .tags{margin-bottom:4px}
+.card .tag{display:inline-block;font-size:11px;color:#6d9a88;background:#eef7f2;border-radius:12px;padding:2px 12px;margin:2px 4px 2px 0}
+.card .arrow{font-size:16px;color:#b8dccd;transition:color .2s,transform .2s;margin-top:4px}
+.card:hover .arrow{color:#3a7a66;transform:translateX(3px)}
 
-        /* ===== 容器 ===== */
-        .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; }
+/* 编辑模式下的卡片 */
+.card.editing{cursor:default}
+.card.editing:hover{box-shadow:0 2px 12px rgba(0,0,0,0.04);transform:none}
+.card .del-btn{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;background:#f5e4de;border:none;cursor:pointer;font-size:14px;color:#b57a6a;display:none;align-items:center;justify-content:center;transition:background .2s;line-height:1;z-index:5}
+.card .del-btn:hover{background:#e8c8be;color:#944a3a}
+.card .del-btn.show{display:flex}
+.card .card-title-input{font-size:17px;font-weight:600;color:#1f4d3f;border:none;background:transparent;outline:none;font-family:inherit;flex:1;min-width:40px;padding:2px 4px;border-radius:4px;width:100%}
+.card .card-title-input:focus{background:#fafffc;box-shadow:inset 0 0 0 2px #b8dccd}
+.card .card-summary-input{font-size:13.5px;color:#5d7a6e;width:100%;border:none;background:transparent;outline:none;font-family:inherit;padding:2px 4px;border-radius:4px;margin-bottom:8px;resize:none;height:40px}
+.card .card-summary-input:focus{background:#fafffc;box-shadow:inset 0 0 0 2px #b8dccd}
 
-        /* ===== 网格 ===== */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.ic-green{background:#d4ede2}
+.ic-coral{background:#f5e4de}
+.ic-blue{background:#d4e8ed}
+.ic-purple{background:#e4dff0}
+.ic-gold{background:#f5eed4}
+.ic-mint{background:#d4edeb}
 
-        .card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            border: 1px solid #eaf1ed;
-            padding: 20px 22px 16px;
-            position: relative;
-            transition: box-shadow 0.25s, transform 0.2s;
-        }
-        .card.clickable { cursor: pointer; }
-        .card.clickable:hover { box-shadow: 0 6px 28px rgba(58,122,102,0.13); transform: translateY(-2px); }
-        .card .icon-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
-        .card .icon-badge {
-            width: 40px; height: 40px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px; flex-shrink: 0;
-        }
-        .card .card-title-edit, .card .card-title-text {
-            font-size: 17px; font-weight: 600; color: #1f4d3f;
-            border: none; background: transparent; outline: none;
-            font-family: inherit; flex: 1; min-width: 40px;
-            padding: 2px 4px; border-radius: 4px;
-        }
-        .card .card-title-edit:focus { background: #fafffc; box-shadow: inset 0 0 0 2px #b8dccd; }
-        .card .card-summary-edit {
-            font-size: 13.5px; color: #5d7a6e; width: 100%;
-            border: none; background: transparent; outline: none;
-            font-family: inherit; padding: 2px 4px; border-radius: 4px;
-            margin-bottom: 8px; resize: none; height: 40px;
-        }
-        .card .card-summary-edit:focus { background: #fafffc; box-shadow: inset 0 0 0 2px #b8dccd; }
-        .card .card-summary-text {
-            font-size: 13.5px; color: #5d7a6e; margin-bottom: 8px;
-        }
-        .card .tags { margin-bottom: 4px; }
-        .card .tag {
-            display: inline-block; font-size: 11px; color: #6d9a88;
-            background: #eef7f2; border-radius: 12px;
-            padding: 2px 12px; margin: 2px 4px 2px 0;
-        }
-        .card .arrow {
-            font-size: 16px; color: #b8dccd;
-            transition: color 0.2s, transform 0.2s; margin-top: 4px;
-        }
-        .card.clickable:hover .arrow { color: #3a7a66; transform: translateX(3px); }
+/* 添加板块按钮 */
+.add-card-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;border:2px dashed #c8ddd2;border-radius:16px;padding:32px 20px;cursor:pointer;color:#6d9a88;font-size:15px;font-weight:500;transition:background .2s,border-color .2s,color .2s;min-height:140px;font-family:inherit}
+.add-card-btn:hover{background:#f0f8f3;border-color:#7ab5a0;color:#3a7a66}
+.add-card-btn .plus{font-size:28px;line-height:1}
 
-        /* 删除按钮 */
-        .card .del-btn {
-            position: absolute; top: 10px; right: 10px;
-            width: 28px; height: 28px; border-radius: 50%;
-            background: #f5e4de; border: none; cursor: pointer;
-            font-size: 14px; color: #b57a6a;
-            display: none; align-items: center; justify-content: center;
-            transition: background 0.2s; line-height: 1; z-index: 5;
-        }
-        .card .del-btn:hover { background: #e8c8be; color: #944a3a; }
-        .card .del-btn.show { display: flex; }
+/* 详情视图 */
+#viewDetail{display:none;animation:fadeUp .35s ease}
+#viewGrid{display:block}
+#viewGrid.hide{display:none}
+#viewDetail.show{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.detail-header{background:#fff;border-radius:16px;padding:28px 28px 20px;margin-bottom:20px;border:1px solid #eaf1ed}
+.detail-header .title-row{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.detail-header .big-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.detail-header h2{font-size:22px;font-weight:700;color:#1f4d3f}
+.detail-header .meta{font-size:13px;color:#5d7a6e}
 
-        /* 拖动排序手柄 */
-        .card .drag-handle {
-            position: absolute; top: 10px; left: 10px;
-            width: 28px; height: 28px; border-radius: 50%;
-            background: #e4f0ea; cursor: grab;
-            font-size: 14px; color: #6d9a88;
-            display: none; align-items: center; justify-content: center;
-            line-height: 1; z-index: 5; user-select: none;
-        }
-        .card .drag-handle.show { display: flex; }
-        .card .drag-handle:active { cursor: grabbing; }
-        .card.dragging { opacity: 0.5; }
+/* 详情页编辑工具栏 */
+.edit-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:12px 16px;background:#fafffc;border-radius:12px;border:1px solid #dcefe4}
+.edit-toolbar .btn{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #d4e4dc;background:#fff;color:#4d7a6a;cursor:pointer;transition:all .2s;font-family:inherit}
+.edit-toolbar .btn:hover{border-color:#7ab5a0;background:#eef7f2}
+.edit-toolbar .btn.active{background:#3a7a66;color:#fff;border-color:#3a7a66}
+.edit-toolbar .btn.save-btn{background:#3a7a66;color:#fff;border-color:#3a7a66}
+.edit-toolbar .btn.save-btn:hover{background:#2d634f}
+.edit-toolbar .spacer{flex:1}
+.edit-toolbar .hint{font-size:11px;color:#8aaa9a;display:flex;align-items:center;gap:4px}
 
-        .ic-green  { background: #d4ede2; }
-        .ic-coral  { background: #f5e4de; }
-        .ic-blue   { background: #d4e8ed; }
-        .ic-purple { background: #e4dff0; }
-        .ic-gold   { background: #f5eed4; }
-        .ic-mint   { background: #d4edeb; }
+.detail-content{background:#fff;border-radius:16px;padding:24px 28px;border:1px solid #eaf1ed;min-height:200px;outline:none;transition:box-shadow .2s}
+.detail-content.editing{box-shadow:0 0 0 2px #7ab5a0}
+.detail-content h3{font-size:16px;font-weight:600;color:#1f4d3f;margin-top:20px;margin-bottom:8px}
+.detail-content h3:first-child{margin-top:0}
+.detail-content p{font-size:14px;color:#4d6a5e;margin-bottom:10px}
+.detail-content ul{padding-left:20px;margin-bottom:12px}
+.detail-content li{font-size:14px;color:#4d6a5e;margin-bottom:4px}
+.detail-content strong{color:#1f4d3f}
+.detail-content .empty-state{text-align:center;padding:40px 20px;color:#8aaa9a}
+.detail-content .empty-state .big{font-size:40px;margin-bottom:10px}
 
-        /* 添加板块按钮 */
-        .add-card-btn {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: #fff; border: 2px dashed #c8ddd2; border-radius: 16px;
-            padding: 28px 20px; cursor: pointer; color: #6d9a88;
-            font-size: 14px; font-weight: 500; min-height: 130px;
-            transition: background 0.2s, border-color 0.2s;
-            font-family: inherit;
-        }
-        .add-card-btn:hover { background: #f0f8f3; border-color: #7ab5a0; color: #3a7a66; }
-        .add-card-btn .plus { font-size: 26px; line-height: 1; }
+/* 数据管理面板 */
+.data-panel{margin-top:40px;padding:20px 24px;background:#fff;border-radius:16px;border:1px solid #eaf1ed}
+.data-panel h3{font-size:15px;font-weight:600;color:#1f4d3f;margin-bottom:12px}
+.data-panel .btns{display:flex;gap:10px;flex-wrap:wrap}
+.data-panel .btn{font-size:12px;padding:6px 16px;border-radius:20px;border:1px solid #d4e4dc;background:#fff;color:#4d7a6a;cursor:pointer;transition:all .2s;font-family:inherit}
+.data-panel .btn:hover{border-color:#7ab5a0;background:#eef7f2}
+.data-panel .btn.primary{background:#3a7a66;color:#fff;border-color:#3a7a66}
+.data-panel .btn.primary:hover{background:#2d634f}
+.data-panel .btn.danger{color:#b57a6a;border-color:#e8c8be}
+.data-panel .btn.danger:hover{background:#f5e4de}
+.data-panel .tip{font-size:12px;color:#8aaa9a;margin-top:8px}
+.data-panel .tip code{background:#eef7f2;padding:1px 6px;border-radius:4px;font-size:11px;color:#3a7a66}
 
-        /* ===== 详情视图 ===== */
-        #viewDetail { display: none; animation: fadeUp 0.35s ease; }
-        #viewGrid { display: block; }
-        #viewGrid.hide { display: none; }
-        #viewDetail.show { display: block; }
+/* 弹窗 */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px 32px 24px;width:90%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.15);animation:fadeUp .25s ease}
+.modal h3{font-size:18px;font-weight:600;color:#1f4d3f;margin-bottom:16px}
+.modal label{display:block;font-size:13px;font-weight:500;color:#4d7a6a;margin-bottom:4px;margin-top:12px}
+.modal label:first-of-type{margin-top:0}
+.modal input,.modal select{width:100%;padding:8px 12px;border-radius:10px;border:1px solid #d4e4dc;font-size:14px;font-family:inherit;outline:none;background:#fafffc}
+.modal input:focus,.modal select:focus{border-color:#7ab5a0;box-shadow:0 0 0 3px rgba(122,181,160,0.15)}
+.modal .btns{display:flex;gap:10px;margin-top:20px;justify-content:flex-end}
+.modal .btns .btn{font-size:13px;padding:8px 20px;border-radius:20px;border:1px solid #d4e4dc;cursor:pointer;font-family:inherit;transition:all .2s}
+.modal .btns .btn.primary{background:#3a7a66;color:#fff;border-color:#3a7a66}
+.modal .btns .btn.primary:hover{background:#2d634f}
+.modal .btns .btn:hover{border-color:#7ab5a0;background:#eef7f2}
+.icon-picker{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:4px}
+.icon-picker .ico-btn{width:38px;height:38px;border-radius:10px;border:1px solid #e2eee8;background:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.icon-picker .ico-btn:hover{border-color:#7ab5a0;background:#eef7f2}
+.icon-picker .ico-btn.selected{border-color:#3a7a66;background:#d4ede2;box-shadow:0 0 0 2px #b8dccd}
 
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1f4d3f;color:#fff;padding:10px 24px;border-radius:30px;font-size:13px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.15);opacity:0;transition:opacity .3s,transform .3s;transform:translateX(-50%) translateY(20px);pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-        .detail-header {
-            background: #fff; border-radius: 16px;
-            padding: 28px 28px 20px; margin-bottom: 20px;
-            border: 1px solid #eaf1ed;
-        }
-        .detail-header .title-row {
-            display: flex; align-items: center; gap: 14px; margin-bottom: 8px;
-        }
-        .detail-header .big-icon {
-            width: 52px; height: 52px; border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; flex-shrink: 0;
-        }
-        .detail-header h2 { font-size: 22px; font-weight: 700; color: #1f4d3f; }
-        .detail-header .meta { font-size: 13px; color: #5d7a6e; }
+.footer{text-align:center;padding:24px;font-size:12px;color:#8aaa9a;border-top:1px solid #e2eee8;background:rgba(255,255,255,0.6)}
+#importInput{display:none}
 
-        /* ===== 编辑工具栏（详情页） ===== */
-        .edit-toolbar {
-            display: flex; gap: 8px; flex-wrap: wrap;
-            margin-bottom: 16px; padding: 12px 16px;
-            background: #fafffc; border-radius: 12px;
-            border: 1px solid #dcefe4;
-        }
-        .edit-toolbar .btn {
-            font-size: 12px; padding: 5px 14px; border-radius: 20px;
-            border: 1px solid #d4e4dc; background: #fff;
-            color: #4d7a6a; cursor: pointer; transition: all 0.2s;
-            font-family: inherit;
-        }
-        .edit-toolbar .btn:hover { border-color: #7ab5a0; background: #eef7f2; }
-        .edit-toolbar .btn.active { background: #3a7a66; color: #fff; border-color: #3a7a66; }
-        .edit-toolbar .btn.save-btn { background: #3a7a66; color: #fff; border-color: #3a7a66; }
-        .edit-toolbar .btn.save-btn:hover { background: #2d634f; }
-        .edit-toolbar .spacer { flex: 1; }
-        .edit-toolbar .hint { font-size: 11px; color: #8aaa9a; display: flex; align-items: center; gap: 4px; }
-
-        .detail-content {
-            background: #fff; border-radius: 16px;
-            padding: 24px 28px; border: 1px solid #eaf1ed;
-            min-height: 200px; outline: none;
-            transition: box-shadow 0.2s;
-        }
-        .detail-content.editing { box-shadow: 0 0 0 2px #7ab5a0; }
-        .detail-content h3 {
-            font-size: 16px; font-weight: 600; color: #1f4d3f;
-            margin-top: 20px; margin-bottom: 8px;
-        }
-        .detail-content h3:first-child { margin-top: 0; }
-        .detail-content p { font-size: 14px; color: #4d6a5e; margin-bottom: 10px; }
-        .detail-content ul { padding-left: 20px; margin-bottom: 12px; }
-        .detail-content li { font-size: 14px; color: #4d6a5e; margin-bottom: 4px; }
-        .detail-content strong { color: #1f4d3f; }
-        .detail-content .empty-state { text-align: center; padding: 40px 20px; color: #8aaa9a; }
-        .detail-content .empty-state .big { font-size: 40px; margin-bottom: 10px; }
-
-        /* ===== 数据管理面板 ===== */
-        .data-panel {
-            margin-top: 40px; padding: 20px 24px;
-            background: #fff; border-radius: 16px;
-            border: 1px solid #eaf1ed;
-        }
-        .data-panel h3 { font-size: 15px; font-weight: 600; color: #1f4d3f; margin-bottom: 12px; }
-        .data-panel .btns { display: flex; gap: 10px; flex-wrap: wrap; }
-        .data-panel .btn {
-            font-size: 12px; padding: 6px 16px; border-radius: 20px;
-            border: 1px solid #d4e4dc; background: #fff;
-            color: #4d7a6a; cursor: pointer; transition: all 0.2s;
-            font-family: inherit;
-        }
-        .data-panel .btn:hover { border-color: #7ab5a0; background: #eef7f2; }
-        .data-panel .btn.primary { background: #3a7a66; color: #fff; border-color: #3a7a66; }
-        .data-panel .btn.primary:hover { background: #2d634f; }
-        .data-panel .btn.danger { color: #b57a6a; border-color: #e8c8be; }
-        .data-panel .btn.danger:hover { background: #f5e4de; }
-        .data-panel .tip { font-size: 12px; color: #8aaa9a; margin-top: 8px; }
-        .data-panel .tip code { background: #eef7f2; padding: 1px 6px; border-radius: 4px; font-size: 11px; color: #3a7a66; }
-
-        /* ===== Toast ===== */
-        .toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: #1f4d3f; color: #fff; padding: 10px 24px;
-            border-radius: 30px; font-size: 13px; z-index: 999;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            opacity: 0; transition: opacity 0.3s, transform 0.3s;
-            transform: translateX(-50%) translateY(20px);
-            pointer-events: none;
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* ===== Footer ===== */
-        .footer {
-            text-align: center; padding: 24px; font-size: 12px;
-            color: #8aaa9a; border-top: 1px solid #e2eee8;
-            background: rgba(255,255,255,0.6);
-        }
-
-        /* ===== 新建板块弹窗 ===== */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.3); z-index: 200;
-            display: none; align-items: center; justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-        .modal-overlay.show { display: flex; }
-        .modal {
-            background: #fff; border-radius: 20px; padding: 28px 32px 24px;
-            width: 90%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            animation: fadeUp 0.25s ease;
-        }
-        .modal h3 { font-size: 18px; font-weight: 600; color: #1f4d3f; margin-bottom: 16px; }
-        .modal label {
-            display: block; font-size: 13px; font-weight: 500; color: #4d7a6a;
-            margin-bottom: 4px; margin-top: 12px;
-        }
-        .modal label:first-of-type { margin-top: 0; }
-        .modal input, .modal select {
-            width: 100%; padding: 8px 12px; border-radius: 10px;
-            border: 1px solid #d4e4dc; font-size: 14px;
-            font-family: inherit; outline: none; background: #fafffc;
-        }
-        .modal input:focus, .modal select:focus { border-color: #7ab5a0; box-shadow: 0 0 0 3px rgba(122,181,160,0.15); }
-        .modal .modal-btns { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-        .modal .modal-btns .btn {
-            font-size: 13px; padding: 8px 20px; border-radius: 20px;
-            border: 1px solid #d4e4dc; cursor: pointer; font-family: inherit;
-            transition: all 0.2s;
-        }
-        .modal .modal-btns .btn.primary { background: #3a7a66; color: #fff; border-color: #3a7a66; }
-        .modal .modal-btns .btn.primary:hover { background: #2d634f; }
-        .modal .modal-btns .btn:hover { border-color: #7ab5a0; background: #eef7f2; }
-
-        /* ===== 图标选择器 ===== */
-        .icon-picker {
-            display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px;
-            margin-top: 4px;
-        }
-        .icon-picker .ico-btn {
-            width: 38px; height: 38px; border-radius: 10px;
-            border: 1px solid #e2eee8; background: #fff;
-            font-size: 20px; cursor: pointer; display: flex;
-            align-items: center; justify-content: center;
-            transition: all 0.15s;
-        }
-        .icon-picker .ico-btn:hover { border-color: #7ab5a0; background: #eef7f2; }
-        .icon-picker .ico-btn.selected { border-color: #3a7a66; background: #d4ede2; box-shadow: 0 0 0 2px #b8dccd; }
-
-        @media (max-width: 640px) {
-            .hero h1 { font-size: 22px; }
-            .hero .hero-title-edit { font-size: 22px; }
-            .grid { grid-template-columns: 1fr; }
-            .container { padding: 16px 14px 60px; }
-            .detail-header { padding: 20px; }
-            .detail-content { padding: 16px 18px; }
-            .edit-toolbar { padding: 10px 12px; }
-            .data-panel { padding: 16px 18px; }
-            .modal { padding: 20px 22px 18px; }
-            .icon-picker { grid-template-columns: repeat(6, 1fr); }
-        }
-
-        #importInput { display: none; }
-    </style>
+@media(max-width:640px){
+.hero h1{font-size:22px}
+.grid{grid-template-columns:1fr}
+.container{padding:16px 14px 60px}
+.detail-header{padding:20px}
+.detail-content{padding:16px 18px}
+.edit-toolbar{padding:10px 12px}
+.data-panel{padding:16px 18px}
+.icon-picker{grid-template-columns:repeat(6,1fr)}
+}
+</style>
 </head>
 <body>
 
-<!-- ===== Toast ===== -->
+<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== 新建板块弹窗 ===== -->
+<!-- 弹窗 -->
 <div class="modal-overlay" id="modal">
-    <div class="modal">
-        <h3>➕ 新建板块</h3>
-        <label>图标</label>
-        <div class="icon-picker" id="iconPicker"></div>
-        <label>板块名称</label>
-        <input id="newTitle" placeholder="例如：购物攻略" />
-        <label>一句话简介</label>
-        <input id="newSummary" placeholder="例如：商圈推荐、购物 Tips" />
-        <label>颜色主题</label>
-        <select id="newColor">
-            <option value="ic-green">绿色</option>
-            <option value="ic-coral">珊瑚色</option>
-            <option value="ic-blue">蓝色</option>
-            <option value="ic-purple">紫色</option>
-            <option value="ic-gold">金色</option>
-            <option value="ic-mint">薄荷色</option>
-        </select>
-        <div class="modal-btns">
-            <button class="btn" onclick="closeModal()">取消</button>
-            <button class="btn primary" onclick="confirmAddSection()">确认添加</button>
-        </div>
-    </div>
+<div class="modal">
+<h3>➕ 新建板块</h3>
+<label>图标</label>
+<div class="icon-picker" id="iconPicker"></div>
+<label>板块名称</label>
+<input id="newTitle" placeholder="例如：购物攻略" />
+<label>一句话简介</label>
+<input id="newSummary" placeholder="例如：商圈推荐、购物 Tips" />
+<label>颜色主题</label>
+<select id="newColor">
+<option value="ic-green">绿色</option>
+<option value="ic-coral">珊瑚色</option>
+<option value="ic-blue">蓝色</option>
+<option value="ic-purple">紫色</option>
+<option value="ic-gold">金色</option>
+<option value="ic-mint">薄荷色</option>
+</select>
+<div class="btns">
+<button class="btn" onclick="closeModal()">取消</button>
+<button class="btn primary" onclick="addSection()">确认添加</button>
+</div>
+</div>
 </div>
 
-<!-- ===== 顶栏 ===== -->
+<!-- 顶栏 -->
 <div class="top-bar">
-    <div class="logo">苏州<span>生活手册</span></div>
-    <div class="back-btn" id="backBtn" onclick="showGrid()">← 返回</div>
-    <div class="spacer"></div>
-    <div class="save-indicator" id="saveIndicator"><span class="dot"></span><span>已保存</span></div>
-    <button class="action-btn" id="editLayoutBtn" onclick="toggleLayoutEdit()">✏️ 编辑布局</button>
-    <button class="action-btn" onclick="downloadHTML()">📥 下载</button>
+<div class="logo">苏州<span>生活手册</span></div>
+<div class="back-btn" id="backBtn" onclick="showGrid()">← 返回</div>
+<div class="spacer"></div>
+<div class="save-indicator" id="saveIndicator"><span class="dot"></span><span>已保存</span></div>
+<button class="btn" id="editLayoutBtn" onclick="toggleLayoutEdit()">✏️ 编辑布局</button>
+<button class="btn primary" onclick="downloadHTML()">📥 下载</button>
 </div>
 
-<!-- ===== Hero ===== -->
+<!-- Hero -->
 <div class="hero">
-    <input class="hero-title-edit" id="heroTitle" value="🌿 苏州生活服务手册" onchange="saveHeroTitle()" />
-    <p>租房攻略 · 美食交通 · 生活指南 · 应急医疗 · 政策补贴 · 游玩地图</p>
-    <div class="status-bar">
-        <span class="tag">👆 点击卡片查看详情</span>
-        <span class="tag">✏️ 点「编辑布局」可增删改板块</span>
-        <span class="tag">💾 自动保存到浏览器</span>
-    </div>
+<h1>🌿 苏州生活服务手册</h1>
+<p>租房攻略 · 美食交通 · 生活指南 · 应急医疗 · 政策补贴 · 游玩地图</p>
+<div class="hint">👆 点击卡片查看详情 · ✏️ 点「编辑布局」可增删改板块 · 💾 自动保存</div>
 </div>
 
-<!-- ===== 网格视图 ===== -->
+<!-- 首页网格 -->
 <div class="container" id="viewGrid">
-    <div class="grid" id="cardGrid"></div>
-
-    <!-- 添加板块按钮（编辑模式） -->
-    <button class="add-card-btn" id="addCardBtn" style="display:none;width:100%;margin-top:20px;" onclick="showModal()">
-        <span class="plus">+</span> 添加新板块
-    </button>
-
-    <!-- 数据管理 -->
-    <div class="data-panel">
-        <h3>🔧 数据管理</h3>
-        <div class="btns">
-            <button class="btn primary" onclick="exportData()">📤 导出数据</button>
-            <button class="btn" onclick="document.getElementById('importInput').click()">📥 导入数据</button>
-            <button class="btn danger" onclick="resetData()">🔄 恢复默认</button>
-        </div>
-        <div class="tip">
-            💡 编辑内容自动保存在浏览器。<strong>导出数据</strong>可分享给组员导入同步。
-            确认最终内容后点击右上角 <code>📥 下载</code> 上传到 GitHub 永久保存。
-        </div>
-    </div>
-    <input type="file" id="importInput" accept=".json" onchange="importData(event)" />
+<div class="grid" id="cardGrid"></div>
+<div id="addCardArea" style="margin-top:20px;display:none">
+<button class="add-card-btn" onclick="showModal()" style="width:100%"><span class="plus">+</span> 添加新板块</button>
 </div>
 
-<!-- ===== 详情视图 ===== -->
+<div class="data-panel">
+<h3>🔧 数据管理</h3>
+<div class="btns">
+<button class="btn primary" onclick="exportData()">📤 导出数据</button>
+<button class="btn" onclick="document.getElementById('importInput').click()">📥 导入数据</button>
+<button class="btn danger" onclick="resetData()">🔄 恢复默认</button>
+</div>
+<div class="tip">💡 编辑内容自动保存在浏览器。<strong>导出数据</strong>可分享给组员导入同步。确认后点右上角 <code>📥 下载</code> 上传到 GitHub 永久保存。</div>
+</div>
+<input type="file" id="importInput" accept=".json" onchange="importData(event)" />
+</div>
+
+<!-- 详情视图 -->
 <div class="container" id="viewDetail">
-    <div class="detail-header" id="detailHeader"></div>
-    <div class="edit-toolbar" id="editToolbar">
-        <button class="btn active" id="viewModeBtn" onclick="toggleDetailEdit(false)">👁️ 预览</button>
-        <button class="btn" id="editModeBtn" onclick="toggleDetailEdit(true)">✏️ 编辑内容</button>
-        <span class="spacer"></span>
-        <span class="hint" id="editHint">👁️ 预览模式</span>
-        <button class="btn save-btn" onclick="saveCurrentSection()">💾 保存</button>
-    </div>
-    <div class="detail-content" id="detailContent"></div>
+<div class="detail-header" id="detailHeader"></div>
+<div class="edit-toolbar">
+<button class="btn active" id="viewModeBtn" onclick="setDetailMode('view')">👁️ 预览</button>
+<button class="btn" id="editModeBtn" onclick="setDetailMode('edit')">✏️ 编辑内容</button>
+<span class="spacer"></span>
+<span class="hint" id="detailHint">👁️ 预览模式</span>
+<button class="btn save-btn" onclick="saveDetail()">💾 保存</button>
+</div>
+<div class="detail-content" id="detailContent"></div>
 </div>
 
-<!-- ===== Footer ===== -->
-<div class="footer">
-    苏州生活服务手册 &mdash; 组员协作维护
-</div>
+<!-- Footer -->
+<div class="footer">苏州生活服务手册 &mdash; 组员协作维护</div>
 
 <script>
-/* ============================================================
-   📦 默认数据 — 组员也可在此修改
-   ============================================================ */
-
-const DEFAULT_SECTIONS = [
-    {
-        id: "rent",
-        icon: "🏠",
-        title: "租房攻略",
-        summary: "热门板块均价、避坑 Tips、签约注意事项",
-        tags: ["园区", "姑苏", "新区"],
-        color: "ic-green",
-        content: `<h3>📍 热门板块参考均价</h3><ul><li><strong>工业园区</strong>：整租 2500-4500 元/月，合租 1200-2000 元/月（金鸡湖、湖东、湖西）</li><li><strong>姑苏区</strong>：整租 2000-3500 元/月，合租 1000-1600 元/月（观前、石路、南门）</li><li><strong>高新区</strong>：整租 1800-3000 元/月，合租 900-1400 元/月（狮山、枫桥）</li><li><strong>吴中区</strong>：整租 1500-2800 元/月，合租 800-1300 元/月</li><li><strong>相城区</strong>：整租 1500-2500 元/月，合租 700-1200 元/月</li></ul><h3>⚠️ 避坑 Tips</h3><ul><li>看房时检查水电表读数，拍照留底</li><li>确认房东身份：查看房产证 + 身份证原件</li><li>避免「二房东」转租，问清是否允许</li><li>签约前确认物业费、网费、垃圾清运费由谁承担</li></ul><h3>📄 签约注意事项</h3><ul><li>合同注明维修责任：家电自然损坏由房东负责</li><li>押金条款：明确退租时押金退还条件和时限</li><li>提前解约：约定提前多久通知，违约金如何计算</li><li>建议通过正规中介签约，保留凭证</li></ul>`
-    },
-    {
-        id: "food",
-        icon: "🍜",
-        title: "餐饮 · 交通指引",
-        summary: "地道美食推荐、地铁公交指南、出行支付方式",
-        tags: ["苏式面", "地铁", "公交"],
-        color: "ic-coral",
-        content: `<h3>🍽️ 地道美食推荐</h3><ul><li><strong>苏式面</strong>：同得兴、朱鸿兴、裕兴记 — 推荐三虾面、秃黄油面</li><li><strong>生煎/汤包</strong>：哑巴生煎、熙盛源</li><li><strong>苏帮菜</strong>：得月楼、松鹤楼 — 松鼠桂鱼、响油鳝糊</li><li><strong>小吃</strong>：鸡脚旮旯、梅花糕、海棠糕</li><li><strong>时令</strong>：3-4月碧螺春、6月杨梅、9-10月大闸蟹</li></ul><h3>🚇 地铁出行</h3><ul><li><strong>1号线</strong>：木渎 → 钟南街（途经观前街、苏州中心）</li><li><strong>2号线</strong>：骑河 → 桑田岛（途经苏州站、高铁北站）</li><li><strong>3号线</strong>：苏州新区站 → 唯亭</li><li><strong>4号线</strong>：龙道浜 → 同里（途经观前、石湖）</li><li><strong>5号线</strong>：太湖香山 → 阳澄湖南</li><li>支付：苏e行 App / 支付宝乘车码 / 云闪付</li></ul><h3>🚌 公交 &amp; 其他</h3><ul><li>公交票价 1-2 元，支持支付宝/微信乘车码</li><li>公共自行车：永安行 App，1小时内免费</li><li>打车：滴滴出行、T3 出行</li></ul>`
-    },
-    {
-        id: "living",
-        icon: "📋",
-        title: "生活指南手册",
-        summary: "日常采买、常用服务电话、生活缴费指南",
-        tags: ["超市", "菜场", "便民"],
-        color: "ic-blue",
-        content: `<h3>🛒 日常采买</h3><ul><li><strong>大型商超</strong>：永旺、大润发、盒马鲜生、山姆会员店</li><li><strong>菜市场</strong>：葑门横街（最地道）、娄门菜场、彩香菜场</li><li><strong>生鲜配送</strong>：叮咚买菜、美团买菜、朴朴超市</li><li><strong>便利店</strong>：全家、罗森、十足（苏州遍布）</li></ul><h3>📞 常用服务电话</h3><ul><li>市民热线：12345（政务咨询、投诉建议）</li><li>自来水公司：65111515</li><li>苏州供电：95598</li><li>港华燃气：68237777</li><li>苏州电信：10000 / 移动：10086 / 联通：10010</li></ul><h3>💡 生活缴费</h3><ul><li>支付宝/微信 — 生活缴费（水电燃气）</li><li>「苏周到」App — 苏州城市生活服务总入口</li><li>有线电视：江苏有线 96296</li></ul>`
-    },
-    {
-        id: "emergency",
-        icon: "🆘",
-        title: "应急 · 医疗预案",
-        summary: "医院名单、应急电话、家庭常备药建议",
-        tags: ["医院", "急救", "常备药"],
-        color: "ic-purple",
-        content: `<h3>🏥 主要医院</h3><ul><li><strong>苏州大学附属第一医院</strong>（十梓街/平海路）— 三甲综合</li><li><strong>苏州大学附属第二医院</strong>（三香路）— 三甲综合</li><li><strong>苏州市立医院</strong>（道前街/白塔西路）— 三甲综合</li><li><strong>苏州大学附属儿童医院</strong>（景德路/园区钟南街）— 三甲专科</li><li><strong>苏州市中医医院</strong>（沧浪新城）— 三甲中医</li></ul><h3>🆘 应急电话</h3><ul><li>急救：120</li><li>火警：119</li><li>报警：110</li><li>交通事故：122</li><li>便民热线：12345</li></ul><h3>💊 家庭常备药建议</h3><ul><li>感冒药：泰诺、白加黑</li><li>退烧药：布洛芬、对乙酰氨基酚</li><li>肠胃药：蒙脱石散、吗丁啉、藿香正气水</li><li>外伤：创可贴、碘伏、云南白药</li><li>过敏：氯雷他定（开瑞坦）</li></ul>`
-    },
-    {
-        id: "policy",
-        icon: "📄",
-        title: "政府补贴政策",
-        summary: "人才租房补贴、创业补贴、社保申领指南",
-        tags: ["人才乐居", "创业补贴", "苏周到"],
-        color: "ic-gold",
-        content: `<h3>🎓 人才乐居工程（租房补贴）</h3><ul><li>适用对象：本科及以上学历，在苏州无住房的引进人才</li><li>补贴标准：博士 800 元/月，硕士 600 元/月，本科 400 元/月</li><li>申请方式：通过「苏周到」App — 人才乐居专区</li><li>所需材料：学历证书、劳动合同、社保证明、无房证明</li></ul><h3>💼 创业补贴</h3><ul><li>一次性创业补贴：1 万元（毕业5年内高校毕业生）</li><li>创业带动就业补贴：每带动1人就业补贴 2000 元</li><li>创业担保贷款：最高 50 万元，财政贴息</li><li>申请渠道：苏州市人社局官网 / 各区人社服务中心</li></ul><h3>📱 社保申领指南</h3><ul><li>社保缴纳：入职后公司统一办理五险一金</li><li>灵活就业：可自行在「苏州社保」公众号参保</li><li>医保报销：门诊年度限额 3000 元，住院按比例报销</li><li>公积金提取：租房提取需提供租赁合同和发票</li><li>查询渠道：「苏周到」App — 社保服务</li></ul>`
-    },
-    {
-        id: "travel",
-        icon: "🗺️",
-        title: "苏州游玩地图",
-        summary: "经典园林、自然风光、周末路线推荐",
-        tags: ["园林", "金鸡湖", "太湖"],
-        color: "ic-mint",
-        content: `<h3>🏯 经典园林</h3><ul><li><strong>拙政园</strong>（80元）— 中国四大名园之一，建议游玩2-3小时</li><li><strong>留园</strong>（55元）— 世界文化遗产，精致江南园林</li><li><strong>狮子林</strong>（40元）— 奇石假山迷宫，趣味十足</li><li><strong>沧浪亭</strong>（20元）— 苏州最古老的园林</li><li>Tips：园林年卡 120 元/年，可游览大部分园林</li></ul><h3>🌊 自然风光</h3><ul><li><strong>金鸡湖景区</strong> — 免费，音乐喷泉、摩天轮、诚品书店</li><li><strong>太湖</strong> — 东山/西山，自驾环湖、采摘、农家乐</li><li><strong>平江路</strong> — 古街漫步，小桥流水，文艺小店</li><li><strong>山塘街</strong> — "七里山塘"，夜景绝美</li><li><strong>虎丘</strong>（70元）— "到苏州不游虎丘，乃憾事也"</li></ul><h3>🗓️ 周末路线推荐</h3><ul><li><strong>一日经典游</strong>：拙政园 → 苏州博物馆 → 平江路 → 观前街</li><li><strong>两日深度游</strong>：Day1 园林线 / Day2 金鸡湖+诚品+山塘夜景</li><li><strong>亲子游</strong>：上方山森林动物世界 → 太湖湿地公园 → 华谊兄弟电影世界</li></ul>`
-    }
+// ===== 默认数据 =====
+var DEFAULT_DATA = [
+{id:"rent",icon:"🏠",title:"租房攻略",summary:"热门板块均价、避坑 Tips、签约注意事项",tags:["园区","姑苏","新区"],color:"ic-green",content:"<h3>📍 热门板块参考均价</h3><ul><li><strong>工业园区</strong>：整租 2500-4500 元/月，合租 1200-2000 元/月（金鸡湖、湖东、湖西）</li><li><strong>姑苏区</strong>：整租 2000-3500 元/月，合租 1000-1600 元/月（观前、石路、南门）</li><li><strong>高新区</strong>：整租 1800-3000 元/月，合租 900-1400 元/月（狮山、枫桥）</li><li><strong>吴中区</strong>：整租 1500-2800 元/月，合租 800-1300 元/月</li><li><strong>相城区</strong>：整租 1500-2500 元/月，合租 700-1200 元/月</li></ul><h3>⚠️ 避坑 Tips</h3><ul><li>看房时检查水电表读数，拍照留底</li><li>确认房东身份：查看房产证 + 身份证原件</li><li>避免「二房东」转租，问清是否允许</li><li>签约前确认物业费、网费、垃圾清运费由谁承担</li></ul><h3>📄 签约注意事项</h3><ul><li>合同注明维修责任：家电自然损坏由房东负责</li><li>押金条款：明确退租时押金退还条件和时限</li><li>提前解约：约定提前多久通知，违约金如何计算</li><li>建议通过正规中介签约，保留凭证</li></ul>"},
+{id:"food",icon:"🍜",title:"餐饮 · 交通指引",summary:"地道美食推荐、地铁公交指南、出行支付方式",tags:["苏式面","地铁","公交"],color:"ic-coral",content:"<h3>🍽️ 地道美食推荐</h3><ul><li><strong>苏式面</strong>：同得兴、朱鸿兴、裕兴记 — 推荐三虾面、秃黄油面</li><li><strong>生煎/汤包</strong>：哑巴生煎、熙盛源</li><li><strong>苏帮菜</strong>：得月楼、松鹤楼 — 松鼠桂鱼、响油鳝糊</li><li><strong>小吃</strong>：鸡脚旮旯、梅花糕、海棠糕</li><li><strong>时令</strong>：3-4月碧螺春、6月杨梅、9-10月大闸蟹</li></ul><h3>🚇 地铁出行</h3><ul><li><strong>1号线</strong>：木渎 → 钟南街（途经观前街、苏州中心）</li><li><strong>2号线</strong>：骑河 → 桑田岛（途经苏州站、高铁北站）</li><li><strong>3号线</strong>：苏州新区站 → 唯亭</li><li><strong>4号线</strong>：龙道浜 → 同里（途经观前、石湖）</li><li><strong>5号线</strong>：太湖香山 → 阳澄湖南</li><li>支付：苏e行 App / 支付宝乘车码 / 云闪付</li></ul><h3>🚌 公交 &amp; 其他</h3><ul><li>公交票价 1-2 元，支持支付宝/微信乘车码</li><li>公共自行车：永安行 App，1小时内免费</li><li>打车：滴滴出行、T3 出行</li></ul>"},
+{id:"living",icon:"📋",title:"生活指南手册",summary:"日常采买、常用服务电话、生活缴费指南",tags:["超市","菜场","便民"],color:"ic-blue",content:"<h3>🛒 日常采买</h3><ul><li><strong>大型商超</strong>：永旺、大润发、盒马鲜生、山姆会员店</li><li><strong>菜市场</strong>：葑门横街（最地道）、娄门菜场、彩香菜场</li><li><strong>生鲜配送</strong>：叮咚买菜、美团买菜、朴朴超市</li><li><strong>便利店</strong>：全家、罗森、十足（苏州遍布）</li></ul><h3>📞 常用服务电话</h3><ul><li>市民热线：12345（政务咨询、投诉建议）</li><li>自来水公司：65111515</li><li>苏州供电：95598</li><li>港华燃气：68237777</li><li>苏州电信：10000 / 移动：10086 / 联通：10010</li></ul><h3>💡 生活缴费</h3><ul><li>支付宝/微信 — 生活缴费（水电燃气）</li><li>「苏周到」App — 苏州城市生活服务总入口</li><li>有线电视：江苏有线 96296</li></ul>"},
+{id:"emergency",icon:"🆘",title:"应急 · 医疗预案",summary:"医院名单、应急电话、家庭常备药建议",tags:["医院","急救","常备药"],color:"ic-purple",content:"<h3>🏥 主要医院</h3><ul><li><strong>苏州大学附属第一医院</strong>（十梓街/平海路）— 三甲综合</li><li><strong>苏州大学附属第二医院</strong>（三香路）— 三甲综合</li><li><strong>苏州市立医院</strong>（道前街/白塔西路）— 三甲综合</li><li><strong>苏州大学附属儿童医院</strong>（景德路/园区钟南街）— 三甲专科</li><li><strong>苏州市中医医院</strong>（沧浪新城）— 三甲中医</li></ul><h3>🆘 应急电话</h3><ul><li>急救：120</li><li>火警：119</li><li>报警：110</li><li>交通事故：122</li><li>便民热线：12345</li></ul><h3>💊 家庭常备药建议</h3><ul><li>感冒药：泰诺、白加黑</li><li>退烧药：布洛芬、对乙酰氨基酚</li><li>肠胃药：蒙脱石散、吗丁啉、藿香正气水</li><li>外伤：创可贴、碘伏、云南白药</li><li>过敏：氯雷他定（开瑞坦）</li></ul>"},
+{id:"policy",icon:"📄",title:"政府补贴政策",summary:"人才租房补贴、创业补贴、社保申领指南",tags:["人才乐居","创业补贴","苏周到"],color:"ic-gold",content:"<h3>🎓 人才乐居工程（租房补贴）</h3><ul><li>适用对象：本科及以上学历，在苏州无住房的引进人才</li><li>补贴标准：博士 800 元/月，硕士 600 元/月，本科 400 元/月</li><li>申请方式：通过「苏周到」App — 人才乐居专区</li><li>所需材料：学历证书、劳动合同、社保证明、无房证明</li></ul><h3>💼 创业补贴</h3><ul><li>一次性创业补贴：1 万元（毕业5年内高校毕业生）</li><li>创业带动就业补贴：每带动1人就业补贴 2000 元</li><li>创业担保贷款：最高 50 万元，财政贴息</li><li>申请渠道：苏州市人社局官网 / 各区人社服务中心</li></ul><h3>📱 社保申领指南</h3><ul><li>社保缴纳：入职后公司统一办理五险一金</li><li>灵活就业：可自行在「苏州社保」公众号参保</li><li>医保报销：门诊年度限额 3000 元，住院按比例报销</li><li>公积金提取：租房提取需提供租赁合同和发票</li><li>查询渠道：「苏周到」App — 社保服务</li></ul>"},
+{id:"travel",icon:"🗺️",title:"苏州游玩地图",summary:"经典园林、自然风光、周末路线推荐",tags:["园林","金鸡湖","太湖"],color:"ic-mint",content:"<h3>🏯 经典园林</h3><ul><li><strong>拙政园</strong>（80元）— 中国四大名园之一，建议游玩2-3小时</li><li><strong>留园</strong>（55元）— 世界文化遗产，精致江南园林</li><li><strong>狮子林</strong>（40元）— 奇石假山迷宫，趣味十足</li><li><strong>沧浪亭</strong>（20元）— 苏州最古老的园林</li><li>Tips：园林年卡 120 元/年，可游览大部分园林</li></ul><h3>🌊 自然风光</h3><ul><li><strong>金鸡湖景区</strong> — 免费，音乐喷泉、摩天轮、诚品书店</li><li><strong>太湖</strong> — 东山/西山，自驾环湖、采摘、农家乐</li><li><strong>平江路</strong> — 古街漫步，小桥流水，文艺小店</li><li><strong>山塘街</strong> — '七里山塘'，夜景绝美</li><li><strong>虎丘</strong>（70元）— '到苏州不游虎丘，乃憾事也'</li></ul><h3>🗓️ 周末路线推荐</h3><ul><li><strong>一日经典游</strong>：拙政园 → 苏州博物馆 → 平江路 → 观前街</li><li><strong>两日深度游</strong>：Day1 园林线 / Day2 金鸡湖+诚品+山塘夜景</li><li><strong>亲子游</strong>：上方山森林动物世界 → 太湖湿地公园 → 华谊兄弟电影世界</li></ul>"}
 ];
 
-const ICONS = ["🏠","🍜","📋","🆘","📄","🗺️","🛒","🚇","🏥","🎓","🏯","🌊","☕","📱","💡","🎵","🏪","🎬","🏖️","🎨","⚽","📚","🎮","🌳","🏛️","🚌","✈️","🏕️","🐾","🎪","🍰","🌮"];
+var ICONS = ["🏠","🍜","📋","🆘","📄","🗺️","🛒","🚇","🏥","🎓","🏯","🌊","☕","📱","💡","🎵","🏪","🎬","🏖️","🎨","⚽","📚","🎮","🌳","🏛️","🚌","✈️","🏕️","🐾","🎪","🍰","🌮"];
 
-const STORAGE_KEY = 'suzhou_guide_data';
-const HERO_TITLE_KEY = 'suzhou_guide_hero_title';
+// ===== 状态 =====
+var sections = [];
+var currentId = null;
+var isEditMode = false;   // 首页编辑布局模式
+var isDetailEdit = false;  // 详情页编辑模式
+var selectedIcon = "📋";
 
-let sections = [];
-let currentSectionId = null;
-let isDetailEditing = false;
-let isLayoutEditing = false;
-let dragIndex = null;
+// ===== 初始化 =====
+function init() {
+  var saved = localStorage.getItem("suzhou_data");
+  if (saved) {
+    try { sections = JSON.parse(saved); } catch(e) {}
+  }
+  if (!sections || !sections.length) {
+    sections = JSON.parse(JSON.stringify(DEFAULT_DATA));
+    saveData();
+  }
+  renderGrid();
+}
 
-/* ===== 数据加载 ===== */
-function loadData() {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-        try { sections = JSON.parse(saved); return; } catch (e) {}
+function saveData() {
+  localStorage.setItem("suzhou_data", JSON.stringify(sections));
+  var ind = document.getElementById("saveIndicator");
+  ind.classList.add("show");
+  clearTimeout(window._st);
+  window._st = setTimeout(function(){ ind.classList.remove("show"); }, 2000);
+}
+
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.classList.remove("show"); }, 2500);
+}
+
+// ===== 首页网格 =====
+function renderGrid() {
+  var grid = document.getElementById("cardGrid");
+  var html = "";
+  for (var i = 0; i < sections.length; i++) {
+    var s = sections[i];
+    var tagsHtml = "";
+    for (var j = 0; j < (s.tags || []).length; j++) {
+      tagsHtml += '<span class="tag">#' + s.tags[j] + '</span>';
     }
-    sections = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
-    saveToStorage();
-
-    const savedTitle = localStorage.getItem(HERO_TITLE_KEY);
-    if (savedTitle) document.getElementById('heroTitle').value = savedTitle;
+    if (isEditMode) {
+      html += '<div class="card editing" data-idx="' + i + '">';
+      html += '<button class="del-btn show" onclick="deleteSection(' + i + ')">✕</button>';
+      html += '<div class="icon-row">';
+      html += '<div class="icon-badge ' + s.color + '">' + s.icon + '</div>';
+      html += '<input class="card-title-input" value="' + escHtml(s.title) + '" onchange="updateField(' + i + ',\'title\',this.value)" />';
+      html += '</div>';
+      html += '<textarea class="card-summary-input" onchange="updateField(' + i + ',\'summary\',this.value)">' + escHtml(s.summary) + '</textarea>';
+      html += '<div class="tags">' + tagsHtml + '</div>';
+      html += '<div class="arrow">拖拽可排序</div>';
+      html += '</div>';
+    } else {
+      html += '<div class="card" onclick="showDetail(\'' + s.id + '\')">';
+      html += '<div class="icon-row">';
+      html += '<div class="icon-badge ' + s.color + '">' + s.icon + '</div>';
+      html += '<div class="card-title">' + escHtml(s.title) + '</div>';
+      html += '</div>';
+      html += '<div class="card-summary">' + escHtml(s.summary) + '</div>';
+      html += '<div class="tags">' + tagsHtml + '</div>';
+      html += '<div class="arrow">查看详情 →</div>';
+      html += '</div>';
+    }
+  }
+  grid.innerHTML = html;
 }
 
-function saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sections));
-    document.getElementById('saveIndicator').classList.add('show');
-    clearTimeout(window._saveTimeout);
-    window._saveTimeout = setTimeout(() => {
-        document.getElementById('saveIndicator').classList.remove('show');
-    }, 2000);
+function escHtml(str) {
+  if (!str) return "";
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function saveHeroTitle() {
-    localStorage.setItem(HERO_TITLE_KEY, document.getElementById('heroTitle').value);
-    saveToStorage();
+function updateField(idx, field, val) {
+  if (sections[idx]) { sections[idx][field] = val; saveData(); }
 }
 
-/* ===== 渲染网格 ===== */
-function renderCards() {
-    const grid = document.getElementById('cardGrid');
-    grid.innerHTML = sections.map((s, idx) => {
-        const isEdit = isLayoutEditing;
-        return `
-        <div class="card ${isEdit ? '' : 'clickable'}" data-index="${idx}"
-             ${isEdit ? '' : `onclick="showDetail('${s.id}')"`}>
-            ${isEdit ? `<div class="drag-handle show" onmousedown="startDrag(${idx}, event)">⠿</div>` : ''}
-            ${isEdit ? `<button class="del-btn show" onclick="deleteSection(${idx}, event)">✕</button>` : ''}
-            <div class="icon-row">
-                <div class="icon-badge ${s.color}">${s.icon}</div>
-                ${isEdit
-                    ? `<input class="card-title-edit" value="${s.title}" data-idx="${idx}" onchange="updateTitle(${idx}, this.value)" />`
-                    : `<div class="card-title-text">${s.title}</div>`}
-            </div>
-            ${isEdit
-                ? `<textarea class="card-summary-edit" data-idx="${idx}" onchange="updateSummary(${idx}, this.value)">${s.summary}</textarea>`
-                : `<div class="card-summary-text">${s.summary}</div>`}
-            <div class="tags">${s.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>
-            <div class="arrow">${isEdit ? '拖拽排序' : '查看详情 →'}</div>
-        </div>`;
-    }).join('');
-}
-
-/* ===== 编辑布局模式 ===== */
+// ===== 编辑布局模式 =====
 function toggleLayoutEdit() {
-    isLayoutEditing = !isLayoutEditing;
-    document.getElementById('editLayoutBtn').classList.toggle('active', isLayoutEditing);
-    document.getElementById('addCardBtn').style.display = isLayoutEditing ? 'flex' : 'none';
-    if (isLayoutEditing && document.getElementById('viewDetail').classList.contains('show')) {
-        showGrid();
-    }
-    renderCards();
+  isEditMode = !isEditMode;
+  document.getElementById("editLayoutBtn").classList.toggle("active", isEditMode);
+  document.getElementById("addCardArea").style.display = isEditMode ? "block" : "none";
+  if (isEditMode && document.getElementById("viewDetail").classList.contains("show")) {
+    showGrid();
+  }
+  renderGrid();
 }
 
-/* ===== 标题 / 摘要更新 ===== */
-function updateTitle(idx, val) {
-    if (sections[idx]) { sections[idx].title = val; saveToStorage(); }
-}
-function updateSummary(idx, val) {
-    if (sections[idx]) { sections[idx].summary = val; saveToStorage(); }
-}
-
-/* ===== 删除板块 ===== */
-function deleteSection(idx, event) {
-    event.stopPropagation();
-    if (!confirm(`确认删除「${sections[idx].title}」板块？`)) return;
-    sections.splice(idx, 1);
-    saveToStorage();
-    renderCards();
-    showToast('✅ 已删除');
+// ===== 删除板块 =====
+function deleteSection(idx) {
+  if (!confirm("确认删除「" + sections[idx].title + "」板块？")) return;
+  sections.splice(idx, 1);
+  saveData();
+  renderGrid();
+  toast("✅ 已删除");
 }
 
-/* ===== 弹窗（新建板块） ===== */
+// ===== 新建板块 =====
 function showModal() {
-    document.getElementById('modal').classList.add('show');
-    document.getElementById('newTitle').value = '';
-    document.getElementById('newSummary').value = '';
-    document.getElementById('newColor').value = 'ic-green';
-    renderIconPicker();
+  document.getElementById("modal").classList.add("show");
+  document.getElementById("newTitle").value = "";
+  document.getElementById("newSummary").value = "";
+  document.getElementById("newColor").value = "ic-green";
+  renderIcons();
+  selectIcon("📋");
 }
 function closeModal() {
-    document.getElementById('modal').classList.remove('show');
+  document.getElementById("modal").classList.remove("show");
 }
-
-function renderIconPicker() {
-    const container = document.getElementById('iconPicker');
-    container.innerHTML = ICONS.map(ico =>
-        `<button class="ico-btn" data-icon="${ico}" onclick="selectIcon('${ico}')">${ico}</button>`
-    ).join('');
-    selectIcon('📋');
+function renderIcons() {
+  var c = document.getElementById("iconPicker");
+  var h = "";
+  for (var i = 0; i < ICONS.length; i++) {
+    h += '<button class="ico-btn" data-icon="' + ICONS[i] + '" onclick="selectIcon(\'' + ICONS[i] + '\')">' + ICONS[i] + '</button>';
+  }
+  c.innerHTML = h;
 }
-
-let selectedIcon = '📋';
 function selectIcon(ico) {
-    selectedIcon = ico;
-    document.querySelectorAll('.ico-btn').forEach(b => b.classList.toggle('selected', b.dataset.icon === ico));
+  selectedIcon = ico;
+  var btns = document.querySelectorAll(".ico-btn");
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle("selected", btns[i].getAttribute("data-icon") === ico);
+  }
+}
+function addSection() {
+  var title = document.getElementById("newTitle").value.trim();
+  if (!title) { toast("❌ 请输入板块名称"); return; }
+  var summary = document.getElementById("newSummary").value.trim() || "内容待补充";
+  var color = document.getElementById("newColor").value;
+  sections.push({
+    id: "sec_" + Date.now(),
+    icon: selectedIcon,
+    title: title,
+    summary: summary,
+    tags: [],
+    color: color,
+    content: '<div class="empty-state"><div class="big">📝</div><p>内容待补充 — 点击编辑</p></div>'
+  });
+  saveData();
+  renderGrid();
+  closeModal();
+  toast("✅ 已添加「" + title + "」");
 }
 
-function confirmAddSection() {
-    const title = document.getElementById('newTitle').value.trim();
-    if (!title) { showToast('❌ 请输入板块名称'); return; }
-    const summary = document.getElementById('newSummary').value.trim() || '内容待补充';
-    const color = document.getElementById('newColor').value;
-    const id = 'sec_' + Date.now();
-
-    sections.push({
-        id, icon: selectedIcon, title, summary,
-        tags: [], color,
-        content: '<div class="empty-state"><div class="big">📝</div><p>内容待补充 — 点击编辑</p></div>'
-    });
-    saveToStorage();
-    renderCards();
-    closeModal();
-    showToast('✅ 已添加「' + title + '」');
-}
-
-/* ===== 拖动排序 ===== */
-function startDrag(idx, event) {
-    event.preventDefault();
-    dragIndex = idx;
-    const cards = document.querySelectorAll('.card');
-    cards[idx].classList.add('dragging');
-
-    function onMove(e) {
-        const touch = e.touches ? e.touches[0] : e;
-        cards.forEach((card, i) => {
-            if (i === idx) return;
-            const rect = card.getBoundingClientRect();
-            const midY = rect.top + rect.height / 2;
-            if (touch.clientY < midY + 10 && touch.clientY > rect.top - 10) {
-                if (i < idx) {
-                    const item = sections.splice(idx, 1)[0];
-                    sections.splice(i, 0, item);
-                    dragIndex = i;
-                } else if (i > idx) {
-                    const item = sections.splice(idx, 1)[0];
-                    sections.splice(i, 0, item);
-                    dragIndex = i;
-                }
-                saveToStorage();
-                renderCards();
-                document.querySelectorAll('.card')[dragIndex]?.classList.add('dragging');
-                break;
-            }
-        });
-    }
-
-    function onEnd() {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onEnd);
-        document.removeEventListener('touchmove', onMove);
-        document.removeEventListener('touchend', onEnd);
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('dragging'));
-        dragIndex = null;
-        saveToStorage();
-    }
-
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onEnd);
-    document.addEventListener('touchmove', onMove, { passive: true });
-    document.addEventListener('touchend', onEnd);
-}
-
-/* ===== 详情视图 ===== */
+// ===== 详情视图 =====
 function showDetail(id) {
-    const section = sections.find(s => s.id === id);
-    if (!section) return;
-    currentSectionId = id;
-
-    document.getElementById('viewGrid').classList.add('hide');
-    document.getElementById('viewDetail').classList.add('show');
-    document.getElementById('backBtn').classList.add('show');
-
-    document.getElementById('detailHeader').innerHTML = `
-        <div class="title-row">
-            <div class="big-icon ${section.color}">${section.icon}</div>
-            <div><h2>${section.title}</h2><div class="meta">${section.summary}</div></div>
-        </div>`;
-
-    isDetailEditing = false;
-    document.getElementById('viewModeBtn').classList.add('active');
-    document.getElementById('editModeBtn').classList.remove('active');
-    document.getElementById('editHint').textContent = '👁️ 预览模式';
-    renderDetailContent(section);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  var s = findSection(id);
+  if (!s) return;
+  currentId = id;
+  document.getElementById("viewGrid").classList.add("hide");
+  document.getElementById("viewDetail").classList.add("show");
+  document.getElementById("backBtn").classList.add("show");
+  document.getElementById("detailHeader").innerHTML =
+    '<div class="title-row"><div class="big-icon ' + s.color + '">' + s.icon + '</div><div><h2>' + escHtml(s.title) + '</h2><div class="meta">' + escHtml(s.summary) + '</div></div></div>';
+  isDetailEdit = false;
+  document.getElementById("viewModeBtn").classList.add("active");
+  document.getElementById("editModeBtn").classList.remove("active");
+  document.getElementById("detailHint").textContent = "👁️ 预览模式";
+  renderDetail(s);
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-function renderDetailContent(section) {
-    const el = document.getElementById('detailContent');
-    el.innerHTML = section.content || '<div class="empty-state"><div class="big">📝</div><p>内容待补充</p></div>';
-    el.contentEditable = isDetailEditing;
-    el.classList.toggle('editing', isDetailEditing);
+function findSection(id) {
+  for (var i = 0; i < sections.length; i++) {
+    if (sections[i].id === id) return sections[i];
+  }
+  return null;
 }
 
-function toggleDetailEdit(edit) {
-    isDetailEditing = edit;
-    document.getElementById('viewModeBtn').classList.toggle('active', !edit);
-    document.getElementById('editModeBtn').classList.toggle('active', edit);
-    document.getElementById('editHint').textContent = edit ? '✏️ 编辑模式 — 直接点击修改' : '👁️ 预览模式';
-    const section = sections.find(s => s.id === currentSectionId);
-    if (section) renderDetailContent(section);
+function renderDetail(s) {
+  var el = document.getElementById("detailContent");
+  el.innerHTML = s.content || '<div class="empty-state"><div class="big">📝</div><p>内容待补充</p></div>';
+  el.contentEditable = isDetailEdit;
+  el.classList.toggle("editing", isDetailEdit);
 }
 
-function saveCurrentSection() {
-    if (!currentSectionId) return;
-    const section = sections.find(s => s.id === currentSectionId);
-    if (!section) return;
-    section.content = document.getElementById('detailContent').innerHTML;
-    saveToStorage();
-    showToast('✅ 已保存');
+function setDetailMode(mode) {
+  isDetailEdit = (mode === "edit");
+  document.getElementById("viewModeBtn").classList.toggle("active", !isDetailEdit);
+  document.getElementById("editModeBtn").classList.toggle("active", isDetailEdit);
+  document.getElementById("detailHint").textContent = isDetailEdit ? "✏️ 编辑模式 — 直接点击修改" : "👁️ 预览模式";
+  var s = findSection(currentId);
+  if (s) renderDetail(s);
+}
+
+function saveDetail() {
+  var s = findSection(currentId);
+  if (!s) return;
+  s.content = document.getElementById("detailContent").innerHTML;
+  saveData();
+  toast("✅ 已保存");
 }
 
 function showGrid() {
-    document.getElementById('viewGrid').classList.remove('hide');
-    document.getElementById('viewDetail').classList.remove('show');
-    document.getElementById('backBtn').classList.remove('show');
-    currentSectionId = null;
-    renderCards();
+  document.getElementById("viewGrid").classList.remove("hide");
+  document.getElementById("viewDetail").classList.remove("show");
+  document.getElementById("backBtn").classList.remove("show");
+  currentId = null;
+  renderGrid();
 }
 
-/* ===== 导出 / 导入 / 重置 ===== */
+// ===== 导出 / 导入 / 重置 =====
 function exportData() {
-    const data = JSON.stringify(sections, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = '苏州生活手册数据.json';
-    a.click(); URL.revokeObjectURL(url);
-    showToast('✅ 已导出，可分享给组员');
+  var data = JSON.stringify(sections, null, 2);
+  var blob = new Blob([data], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = "苏州生活手册数据.json";
+  a.click(); URL.revokeObjectURL(url);
+  toast("✅ 已导出，可分享给组员");
 }
 
-function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            if (Array.isArray(data) && data.length > 0 && data[0].id) {
-                sections = data; saveToStorage(); renderCards();
-                showToast('✅ 导入成功！');
-            } else { showToast('❌ 数据格式不正确'); }
-        } catch (err) { showToast('❌ 解析失败：' + err.message); }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
+function importData(evt) {
+  var file = evt.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (Array.isArray(data) && data.length > 0 && data[0].id) {
+        sections = data; saveData(); renderGrid();
+        toast("✅ 导入成功！");
+      } else { toast("❌ 数据格式不正确"); }
+    } catch(err) { toast("❌ 解析失败：" + err.message); }
+  };
+  reader.readAsText(file);
+  evt.target.value = "";
 }
 
 function resetData() {
-    if (!confirm('确定恢复默认数据？当前修改将丢失！')) return;
-    sections = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
-    saveToStorage(); renderCards();
-    showToast('🔄 已恢复默认');
+  if (!confirm("确定恢复默认数据？当前修改将丢失！")) return;
+  sections = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  saveData(); renderGrid();
+  toast("🔄 已恢复默认");
 }
 
-/* ===== 下载 HTML ===== */
 function downloadHTML() {
-    const htmlContent = document.documentElement.outerHTML;
-    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'index.html';
-    a.click(); URL.revokeObjectURL(url);
-    showToast('📥 已下载，请上传到 GitHub 覆盖原文件');
+  var html = document.documentElement.outerHTML;
+  var blob = new Blob([html], {type:"text/html;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = "index.html";
+  a.click(); URL.revokeObjectURL(url);
+  toast("📥 已下载，请上传到 GitHub 覆盖原文件");
 }
 
-function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(window._toastTimeout);
-    window._toastTimeout = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-/* ===== 初始化 ===== */
-loadData();
-renderCards();
+// ===== 启动 =====
+init();
 </script>
 </body>
 </html>
