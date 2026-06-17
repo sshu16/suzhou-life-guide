@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>苏州生活服务手册</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #f5f9f6;
+            color: #2d3e3a;
+            line-height: 1.8;
+        }
+
+        /* ===== 顶栏 ===== */
+        .top-bar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid #e2eee8;
+            height: 56px;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .top-bar .logo {
+            font-weight: 600; font-size: 17px; color: #3a7a66;
+            letter-spacing: 1px; white-space: nowrap;
+        }
+        .top-bar .logo span { color: #7ab5a0; }
+
+        .top-bar .back-btn {
+            font-size: 13px; color: #3a7a66; font-weight: 500;
+            padding: 4px 14px; border-radius: 20px;
+            background: #eef7f2; cursor: pointer;
+            transition: background 0.2s; display: none;
+            user-select: none; white-space: nowrap;
+        }
+        .top-bar .back-btn:hover { background: #dcefe4; }
+        .top-bar .back-btn.show { display: inline-block; }
+
+        .top-bar .nav-btn {
+            font-size: 12px; color: #5d7a6e;
+            background: #eef7f2; border-radius: 20px;
+            padding: 4px 12px; cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            user-select: none; white-space: nowrap; border: none;
+            font-family: inherit;
+        }
+        .top-bar .nav-btn:hover { background: #dcefe4; color: #2d3e3a; }
+        .top-bar .nav-btn.active { background: #3a7a66; color: #fff; }
+
+        .top-bar .spacer { flex: 1; }
+
+        .top-bar .user-badge {
+            font-size: 12px; color: #4d7a6a;
+            background: #e4f0ea; border-radius: 20px;
+            padding: 4px 12px; white-space: nowrap;
+            display: none; align-items: center; gap: 6px;
+        }
+        .top-bar .user-badge.show { display: inline-flex; }
+        .top-bar .user-badge .role-tag {
+            font-size: 10px; padding: 1px 8px; border-radius: 10px;
+        }
+        .top-bar .user-badge .role-tag.editor { background: #3a7a66; color: #fff; }
+        .top-bar .user-badge .role-tag.viewer { background: #b8dccd; color: #2d3e3a; }
+        .top-bar .user-badge .role-tag.admin { background: #1f4d3f; color: #fff; }
+
+        /* 分享下拉 */
+        .share-wrap { position: relative; }
+        .share-menu {
+            position: absolute; top: 44px; right: 0;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid #e2eee8;
+            padding: 6px;
+            min-width: 170px;
+            display: none;
+            z-index: 200;
+            animation: dropIn 0.15s ease;
+        }
+        .share-menu.show { display: block; }
+        @keyframes dropIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+        .share-menu .item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 10px;
+            cursor: pointer; font-size: 13px; color: #2d3e3a;
+            transition: background 0.15s; border: none;
+            background: none; width: 100%; font-family: inherit;
+        }
+        .share-menu .item:hover { background: #eef7f2; }
+        .share-menu .item .ico { font-size: 16px; }
+        .share-menu .divider { height: 1px; background: #e2eee8; margin: 4px 8px; }
+
+        /* ===== Hero ===== */
+        .hero {
+            background: linear-gradient(135deg, #d4ede2 0%, #b8dccd 50%, #a3cfbd 100%);
+            padding: 48px 24px 36px;
+            text-align: center;
+            transition: padding 0.3s;
+        }
+        .hero h1 { font-size: 28px; font-weight: 700; color: #1f4d3f; margin-bottom: 6px; }
+        .hero p { font-size: 14px; color: #4d7a6a; max-width: 520px; margin: 0 auto; }
+
+        /* ===== 容器 ===== */
+        .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; }
+
+        /* ========== 主视图 ========== */
+        #viewGrid { display: block; }
+        #viewGrid.hide { display: none; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid #eaf1ed;
+            padding: 22px 22px 18px;
+            position: relative;
+            transition: box-shadow 0.25s, transform 0.2s;
+        }
+        .card:hover { box-shadow: 0 6px 28px rgba(58,122,102,0.13); }
+        .card .click-area { cursor: pointer; }
+        .card .icon-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .card .icon-badge {
+            width: 40px; height: 40px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; flex-shrink: 0;
+        }
+        .card .card-title {
+            font-size: 17px; font-weight: 600; color: #1f4d3f;
+            outline: none; min-width: 40px; padding: 2px 4px; border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .card .card-title[contenteditable="true"]:focus { background: #fafffc; box-shadow: inset 0 0 0 2px #b8dccd; }
+        .card .card-summary {
+            font-size: 13.5px; color: #5d7a6e; outline: none; min-width: 40px;
+            padding: 2px 4px; border-radius: 4px; margin-bottom: 8px; transition: background 0.2s;
+        }
+        .card .card-summary[contenteditable="true"]:focus { background: #fafffc; box-shadow: inset 0 0 0 2px #b8dccd; }
+        .card .tags { margin-bottom: 4px; }
+        .card .tag { display: inline-block; font-size: 11px; color: #6d9a88; background: #eef7f2; border-radius: 12px; padding: 2px 12px; margin: 2px 4px 2px 0; }
+        .card .arrow { font-size: 16px; color: #b8dccd; transition: color 0.2s, transform 0.2s; margin-top: 4px; }
+        .card .click-area:hover .arrow { color: #3a7a66; transform: translateX(3px); }
+
+        .card .del-btn {
+            position: absolute; top: 10px; right: 10px;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: #f5e4de; border: none; cursor: pointer;
+            font-size: 14px; color: #b57a6a;
+            display: none; align-items: center; justify-content: center;
+            transition: background 0.2s, color 0.2s; line-height: 1; z-index: 5;
+        }
+        .card .del-btn:hover { background: #e8c8be; color: #944a3a; }
+        .card .del-btn.show { display: flex; }
+
+        .add-card-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: #fff; border: 2px dashed #c8ddd2; border-radius: 16px;
+            padding: 32px 20px; cursor: pointer; color: #6d9a88;
+            font-size: 15px; font-weight: 500;
+            transition: background 0.2s, border-color 0.2s, color 0.2s; min-height: 140px;
+        }
+        .add-card-btn:hover { background: #f0f8f3; border-color: #7ab5a0; color: #3a7a66; }
+        .add-card-btn .plus { font-size: 28px; line-height: 1; }
+
+        .ic-green  { background: #d4ede2; }
+        .ic-coral  { background: #f5e4de; }
+        .ic-blue   { background: #d4e8ed; }
+        .ic-purple { background: #e4dff0; }
+        .ic-gold   { background: #f5eed4; }
+        .ic-mint   { background: #d4edeb; }
+
+        /* ========== 详情视图 ========== */
+        #viewDetail { display: none; animation: fadeUp 0.35s ease; }
+        #viewDetail.show { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+        .detail-card {
+            max-width: 820px; margin: 0 auto; background: #fff;
+            border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid #eaf1ed; padding: 32px 32px 24px;
+        }
+        .detail-card .section-title { font-size: 22px; font-weight: 700; color: #1f4d3f; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e2eee8; }
+        .detail-card .block { margin-bottom: 26px; }
+        .detail-card .block:last-child { margin-bottom: 0; }
+        .detail-card .block h3 { font-size: 16px; font-weight: 600; color: #1f4d3f; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; outline: none; padding: 2px 4px; border-radius: 4px; transition: background 0.2s; }
+        .detail-card .block h3[contenteditable="true"]:focus { background: #fafffc; box-shadow: inset 0 0 0 2px #b8dccd; }
+        .detail-card .editable { padding: 4px 0; border-radius: 8px; outline: none; cursor: default; transition: background 0.2s; }
+        .detail-card .editable[contenteditable="true"] { cursor: text; background: #fafffc; box-shadow: inset 0 0 0 2px #b8dccd; padding: 8px 14px; margin: -8px -14px; border-radius: 10px; }
+        .editable ul, .editable ol { padding-left: 22px; margin: 4px 0; }
+        .editable li { margin-bottom: 5px; }
+        .editable p { margin-bottom: 6px; }
+        .editable strong { color: #1f4d3f; }
+        .detail-tip { text-align: center; font-size: 12px; color: #b0c9bd; padding-top: 16px; margin-top: 8px; border-top: 1px dashed #e2eee8; }
+
+        /* ===== 弹窗（新增板块） ===== */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(30,50,40,0.4);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center; justify-content: center;
+            animation: fadeIn 0.2s;
+        }
+        .modal-overlay.show { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-box {
+            background: #fff; border-radius: 20px; padding: 32px 36px 28px;
+            max-width: 440px; width: 90%;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+            animation: slideUp 0.25s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-box h2 { font-size: 18px; font-weight: 600; color: #1f4d3f; margin-bottom: 8px; }
+        .modal-box .sub { font-size: 13px; color: #6d9a88; margin-bottom: 20px; }
+        .modal-box label { display: block; font-size: 13px; font-weight: 500; color: #3d5a50; margin-bottom: 4px; margin-top: 14px; }
+        .modal-box label:first-of-type { margin-top: 0; }
+        .modal-box input, .modal-box textarea {
+            width: 100%; padding: 10px 14px; border: 1px solid #d4e2da;
+            border-radius: 10px; font-size: 14px; font-family: inherit;
+            outline: none; transition: border-color 0.2s; background: #fafffc;
+        }
+        .modal-box input:focus, .modal-box textarea:focus { border-color: #7ab5a0; box-shadow: 0 0 0 3px rgba(122,181,160,0.15); }
+        .modal-box textarea { resize: vertical; min-height: 60px; }
+        .modal-box .btn-row { display: flex; gap: 10px; margin-top: 22px; justify-content: flex-end; }
+        .modal-box .btn { padding: 10px 24px; border-radius: 24px; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+        .modal-box .btn-primary { background: #3a7a66; color: #fff; }
+        .modal-box .btn-primary:hover { background: #2d634f; }
+        .modal-box .btn-cancel { background: #eef7f2; color: #4d7a6a; }
+        .modal-box .btn-cancel:hover { background: #dcefe4; }
+        .modal-box .emoji-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+        .modal-box .emoji-grid span { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; background: #f0f6f2; transition: background 0.2s, transform 0.15s; }
+        .modal-box .emoji-grid span:hover { background: #d4ede2; transform: scale(1.12); }
+        .modal-box .emoji-grid span.selected { background: #3a7a66; transform: scale(1.1); box-shadow: 0 0 0 3px rgba(58,122,102,0.2); }
+
+        /* ===== 登录弹窗 ===== */
+        #loginModal .modal-box { max-width: 380px; text-align: center; }
+        #loginModal .login-icon { font-size: 48px; margin-bottom: 10px; }
+        #loginModal .login-error { color: #c0392b; font-size: 13px; margin-top: 8px; display: none; }
+        #loginModal .login-error.show { display: block; }
+        #loginModal .login-hint { font-size: 12px; color: #8aa89b; margin-top: 14px; }
+        #loginModal .login-hint code { background: #eef7f2; padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+
+        /* ===== 只读遮罩 ===== */
+        .readonly-banner {
+            background: #f5eed4; color: #5a4e30;
+            text-align: center; padding: 8px 16px;
+            font-size: 13px;
+            display: none;
+        }
+        .readonly-banner.show { display: block; }
+        .readonly-banner span { font-weight: 600; }
+
+        /* ===== Footer ===== */
+        .footer { text-align: center; padding: 24px; color: #8aa89b; font-size: 13px; border-top: 1px solid #e2eee8; }
+
+        /* ===== Toast ===== */
+        .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #2d3e3a; color: #fff; padding: 10px 24px; border-radius: 24px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 9999; }
+        .toast.show { opacity: 1; }
+
+        #importInput { display: none; }
+
+        @media (max-width: 640px) {
+            .hero { padding: 28px 16px 20px; }
+            .hero h1 { font-size: 22px; }
+            .grid { grid-template-columns: 1fr; }
+            .top-bar { padding: 0 10px; gap: 4px; }
+            .top-bar .logo { font-size: 15px; }
+            .top-bar .nav-btn { font-size: 11px; padding: 3px 8px; }
+            .detail-card { padding: 20px 16px; }
+            .modal-box { padding: 24px 20px; }
+        }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 48px 20px; color: #8aa89b; }
+        .empty-state .big-icon { font-size: 48px; margin-bottom: 12px; }
+        .empty-state p { font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<!-- ===== 顶栏 ===== -->
+<div class="top-bar">
+    <div class="back-btn" id="backBtn">← 返回</div>
+    <div class="logo">🌿 生活<span>手册</span></div>
+    <span class="spacer"></span>
+    <div class="user-badge" id="userBadge">
+        <span id="userName"></span>
+        <span class="role-tag" id="userRole"></span>
+    </div>
+    <button class="nav-btn" id="editToggle">✎ 编辑</button>
+    <div class="share-wrap">
+        <button class="nav-btn" id="shareToggle">📤 分享</button>
+        <div class="share-menu" id="shareMenu">
+            <button class="item" id="exportBtn"><span class="ico">⬇️</span> 导出数据（.json）</button>
+            <button class="item" id="importBtn"><span class="ico">⬆️</span> 导入数据</button>
+            <div class="divider"></div>
+            <button class="item" id="refreshBtn"><span class="ico">🔄</span> 刷新数据</button>
+            <button class="item" id="logoutBtn"><span class="ico">🚪</span> 退出登录</button>
+            <div class="divider"></div>
+            <button class="item" id="shareLinkBtn"><span class="ico">🔗</span> 复制分享链接</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 只读提示 ===== -->
+<div class="readonly-banner" id="readonlyBanner">
+    👁️ 你当前为 <span>仅查看</span> 模式 · 如需编辑请联系管理员开通权限
+</div>
+
+<!-- ===== Hero ===== -->
+<div class="hero">
+    <h1 id="heroTitle">苏州生活服务手册</h1>
+    <p id="heroDesc">租房 · 餐饮 · 交通 · 生活 · 应急 · 政策 · 游玩  —  点击板块进入详情</p>
+</div>
+
+<!-- ===== 主视图 ===== -->
+<div class="container" id="viewGrid">
+    <div class="grid" id="cardGrid"></div>
+</div>
+
+<!-- ===== 详情视图 ===== -->
+<div class="container" id="viewDetail">
+    <div class="detail-card" id="detailContent"></div>
+</div>
+
+<!-- ===== 新增板块弹窗 ===== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <h2>➕ 新增板块</h2>
+        <div class="sub">添加一个新的生活服务板块</div>
+        <label>选择图标</label>
+        <div class="emoji-grid" id="emojiGrid">
+            <span data-emoji="🏠">🏠</span><span data-emoji="🍜">🍜</span><span data-emoji="📋">📋</span>
+            <span data-emoji="🆘">🆘</span><span data-emoji="📄">📄</span><span data-emoji="🗺️">🗺️</span>
+            <span data-emoji="☕">☕</span><span data-emoji="🎓">🎓</span><span data-emoji="💼">💼</span>
+            <span data-emoji="🏥">🏥</span><span data-emoji="🚗">🚗</span><span data-emoji="🎮">🎮</span>
+            <span data-emoji="📚">📚</span><span data-emoji="🎵">🎵</span><span data-emoji="⚽">⚽</span>
+            <span data-emoji="✈️">✈️</span>
+        </div>
+        <label>板块名称</label>
+        <input type="text" id="modalName" placeholder="例如：健身指南" />
+        <label>简短描述</label>
+        <textarea id="modalDesc" placeholder="例如：健身房推荐、跑步路线、运动打卡"></textarea>
+        <div class="btn-row">
+            <button class="btn btn-cancel" id="modalCancel">取消</button>
+            <button class="btn btn-primary" id="modalConfirm">确认添加</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 登录弹窗 ===== -->
+<div class="modal-overlay" id="loginModal">
+    <div class="modal-box">
+        <div class="login-icon">🌿</div>
+        <h2>苏州生活手册</h2>
+        <div class="sub">请输入账号密码登录协作平台</div>
+        <label>用户名</label>
+        <input type="text" id="loginUser" placeholder="输入用户名" autocomplete="username" />
+        <label>密码</label>
+        <input type="password" id="loginPass" placeholder="输入密码" autocomplete="current-password" />
+        <div class="login-error" id="loginError">❌ 用户名或密码错误</div>
+        <div class="btn-row" style="justify-content:center; margin-top:18px;">
+            <button class="btn btn-primary" id="loginBtn" style="padding:12px 48px;">登 录</button>
+        </div>
+        <div class="login-hint">
+            默认账号：<code>admin / admin123</code> · <code>editor / edit123</code> · <code>viewer / view123</code>
+        </div>
+    </div>
+</div>
+
+<input type="file" id="importInput" accept=".json" />
+
+<div class="footer">🖱️ 点击卡片进入详情 · Ctrl+E 切换编辑 · 协作服务器实时同步</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    /* ===== API 基址 ===== */
+    const API = '';
+
+    /* ===== DOM ===== */
+    const $grid       = document.getElementById('cardGrid');
+    const $gridView   = document.getElementById('viewGrid');
+    const $detailView = document.getElementById('viewDetail');
+    const $detailCont = document.getElementById('detailContent');
+    const $backBtn    = document.getElementById('backBtn');
+    const $editToggle = document.getElementById('editToggle');
+    const $heroTitle  = document.getElementById('heroTitle');
+    const $heroDesc   = document.getElementById('heroDesc');
+    const toast       = document.getElementById('toast');
+    const $userBadge  = document.getElementById('userBadge');
+    const $userName   = document.getElementById('userName');
+    const $userRole   = document.getElementById('userRole');
+    const $readonlyBanner = document.getElementById('readonlyBanner');
+
+    const $loginModal = document.getElementById('loginModal');
+    const $loginUser  = document.getElementById('loginUser');
+    const $loginPass  = document.getElementById('loginPass');
+    const $loginBtn   = document.getElementById('loginBtn');
+    const $loginError = document.getElementById('loginError');
+
+    const $modal      = document.getElementById('modalOverlay');
+    const $modalName  = document.getElementById('modalName');
+    const $modalDesc  = document.getElementById('modalDesc');
+    const $modalCfm   = document.getElementById('modalConfirm');
+    const $modalCan   = document.getElementById('modalCancel');
+    const $emojiGrid  = document.getElementById('emojiGrid');
+
+    const $shareToggle = document.getElementById('shareToggle');
+    const $shareMenu   = document.getElementById('shareMenu');
+    const $exportBtn   = document.getElementById('exportBtn');
+    const $importBtn   = document.getElementById('importBtn');
+    const $importInput = document.getElementById('importInput');
+    const $refreshBtn  = document.getElementById('refreshBtn');
+    const $logoutBtn   = document.getElementById('logoutBtn');
+    const $shareLinkBtn = document.getElementById('shareLinkBtn');
+
+    /* ===== 状态 ===== */
+    let editing = false;
+    let currentSection = null;
+    let selectedEmoji = '📋';
+    let userRole = null;         // 'admin' | 'editor' | 'viewer' | null
+    let userData = null;         // 完整数据 { sections, details }
+
+    const iconColors = ['ic-green','ic-coral','ic-blue','ic-purple','ic-gold','ic-mint'];
+
+    /* ===== Toast ===== */
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function canEdit() { return userRole === 'admin' || userRole === 'editor'; }
+
+    /* ================================
+       API 调用
+    ================================ */
+
+    function api(path, method, body) {
+        const opts = {
+            method: method || 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        const token = localStorage.getItem('lg_token');
+        if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+        if (body) opts.body = JSON.stringify(body);
+        return fetch(API + path, opts).then(r => r.json());
+    }
+
+    /* ===== 登录流程 ===== */
+    function checkLogin() {
+        const token = localStorage.getItem('lg_token');
+        if (!token) { showLogin(); return; }
+        api('/api/status').then(res => {
+            if (res.loggedIn) {
+                userRole = res.user.role;
+                updateUserBadge(res.user);
+                if (res.user.role === 'viewer') {
+                    $readonlyBanner.classList.add('show');
+                    setEditing(false);
+                }
+                $loginModal.classList.remove('show');
+                loadRemoteData();
+            } else {
+                localStorage.removeItem('lg_token');
+                showLogin();
+            }
+        }).catch(() => {
+            // 离线模式：允许本地编辑但提示
+            showToast('⚠️ 无法连接服务器，使用本地模式');
+            userRole = 'editor';
+            $loginModal.classList.remove('show');
+            loadLocalData();
+        });
+    }
+
+    function showLogin() {
+        $loginModal.classList.add('show');
+        $loginError.classList.remove('show');
+        $loginUser.value = '';
+        $loginPass.value = '';
+        $loginUser.focus();
+    }
+
+    $loginBtn.addEventListener('click', doLogin);
+    $loginUser.addEventListener('keydown', e => { if (e.key === 'Enter') { $loginPass.focus(); } });
+    $loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+    function doLogin() {
+        const username = $loginUser.value.trim();
+        const password = $loginPass.value.trim();
+        if (!username || !password) { showToast('请输入用户名和密码'); return; }
+
+        $loginBtn.textContent = '登录中…';
+        $loginBtn.disabled = true;
+
+        api('/api/login', 'POST', { username, password }).then(res => {
+            if (res.success) {
+                localStorage.setItem('lg_token', res.token);
+                userRole = res.user.role;
+                updateUserBadge(res.user);
+                if (res.user.role === 'viewer') {
+                    $readonlyBanner.classList.add('show');
+                }
+                $loginModal.classList.remove('show');
+                showToast('✅ 欢迎回来，' + res.user.name);
+                loadRemoteData();
+            } else {
+                $loginError.textContent = '❌ ' + (res.error || '登录失败');
+                $loginError.classList.add('show');
+            }
+        }).catch(err => {
+            $loginError.textContent = '❌ 网络错误：' + err.message;
+            $loginError.classList.add('show');
+        }).finally(() => {
+            $loginBtn.textContent = '登 录';
+            $loginBtn.disabled = false;
+        });
+    }
+
+    function updateUserBadge(user) {
+        $userName.textContent = user.name || user.username;
+        $userRole.textContent = user.role === 'admin' ? '管理员' : user.role === 'editor' ? '编辑' : '查看';
+        $userRole.className = 'role-tag ' + user.role;
+        $userBadge.classList.add('show');
+    }
+
+    /* ===== 数据加载 ===== */
+    function loadRemoteData() {
+        api('/api/data').then(res => {
+            if (res.sections) {
+                userData = { sections: res.sections, details: res.details || {} };
+                saveLocalBackup();
+                renderGrid();
+                showToast('✅ 数据已加载 (' + res.sections.length + ' 个板块)');
+            }
+        }).catch(() => {
+            loadLocalData();
+        });
+    }
+
+    function loadLocalData() {
+        try {
+            const raw = localStorage.getItem('lg_sections');
+            const det = localStorage.getItem('lg_details');
+            userData = {
+                sections: raw ? JSON.parse(raw) : [],
+                details: det ? JSON.parse(det) : {}
+            };
+        } catch(e) {
+            userData = { sections: [], details: {} };
+        }
+        if (!userData.sections || userData.sections.length === 0) {
+            // 使用默认数据
+            userData = null;
+            renderGrid();
+        } else {
+            renderGrid();
+        }
+    }
+
+    function saveLocalBackup() {
+        if (userData) {
+            localStorage.setItem('lg_sections', JSON.stringify(userData.sections));
+            localStorage.setItem('lg_details', JSON.stringify(userData.details));
+        }
+    }
+
+    /* ===== 保存到服务器 ===== */
+    function saveToServer() {
+        if (!canEdit()) return;
+        if (!userData) return;
+        saveLocalBackup();
+        if (!localStorage.getItem('lg_token')) return;
+
+        api('/api/save', 'POST', {
+            sections: userData.sections,
+            details: userData.details
+        }).then(res => {
+            if (!res.success) {
+                console.warn('保存失败:', res.error);
+            }
+        }).catch(() => {});
+    }
+
+    let serverSaveTimer = null;
+    function scheduleSave() {
+        clearTimeout(serverSaveTimer);
+        serverSaveTimer = setTimeout(saveToServer, 600);
+    }
+
+    /* ===== 获取详情模板 ===== */
+    function getDetailBlocks(sectionId) {
+        if (userData && userData.details && userData.details[sectionId]) {
+            return userData.details[sectionId];
+        }
+        // 内置模板
+        const tmpl = {
+            'rent': [
+                {title:'📍 热门板块',key:'rent_blocks',html:'<ul><li><strong>工业园区（湖东/湖西）</strong> — 通勤便利，房源新，一居室 3500-5000 元/月</li><li><strong>姑苏区</strong> — 古城韵味，老小区多，一居室 2500-3500 元/月</li><li><strong>高新区（狮山）</strong> — 性价比高，近产业园区，一居室 2800-4000 元/月</li><li><strong>吴中区</strong> — 价格实惠，地铁沿线，一居室 2000-3000 元/月</li><li><strong>相城区</strong> — 新兴板块，租金低，一居室 1800-2800 元/月</li></ul>'},
+                {title:'💡 避坑 Tips',key:'rent_tips',html:'<ul><li>看房时打开水龙头、空调、热水器，确认正常工作</li><li>押金条款、维修责任必须写在合同里，口头承诺不可信</li><li>拍照/录像记录交房状态，避免退租纠纷</li><li>核实房主身份证+房产证，警惕"二房东"无授权转租</li><li>问清物业费、网费、燃气费是否包含在租金内</li></ul>'},
+                {title:'📝 找房渠道',key:'rent_channels',html:'<ul><li>贝壳找房 / 自如 — 房源真实，但有一定服务费</li><li>豆瓣"苏州租房"小组 — 个人转租多，需仔细甄别</li><li>闲鱼 — 房东直租较多，价格可谈</li><li>中介 — 链家、我爱我家（成交后付一个月租金）</li></ul>'},
+                {title:'🔑 签约须知',key:'rent_contract',html:'<ul><li>合同期限：通常签 1 年，短租需提前沟通</li><li>押金：押一付三最常见，押一付一需协商</li><li>提前解约：违约金一般为 1 个月租金</li><li>续租：提前 15-30 天沟通，续租一般不涨租</li></ul>'}
+            ],
+            'food': [
+                {title:'🥟 地道美食推荐',key:'food_list',html:'<ul><li><strong>苏式面</strong> — 同得兴（枫镇大肉面）、裕兴记（三虾面）、伟记奥灶面</li><li><strong>糕点</strong> — 采芝斋（酒酿饼/松子糖）、黄天源（猪油年糕/海棠糕）</li><li><strong>小吃</strong> — 哑巴生煎（临顿路）、潘玉麟糖粥（皮市街）、祥鑫鸡爪</li><li><strong>苏帮菜</strong> — 松鹤楼、得月楼（松鼠鳜鱼、清炒虾仁）</li><li><strong>深夜食堂</strong> — 学士街烧烤一条街、十全街小酒馆</li></ul>'},
+                {title:'🚇 市内交通指南',key:'transport',html:'<ul><li><strong>地铁</strong> — 1/2/3/4/5 号线覆盖主城区，支付宝搜"苏州乘车码"直接刷</li><li><strong>公交</strong> — 票价 1-2 元，支持支付宝/微信/云闪付</li><li><strong>共享单车</strong> — 哈啰/美团/青桔，路边划白线区域即还车点</li><li><strong>出租车</strong> — 起步价 13 元/3 公里，滴滴打车响应快</li><li><strong>水上巴士</strong> — 山塘街→盘门，票价 5 元，感受水城魅力</li></ul>'},
+                {title:'🚄 城际交通',key:'intercity',html:'<ul><li><strong>苏州站</strong> — 市中心，地铁 2/4 号线直达，去上海 25 分钟</li><li><strong>苏州北站</strong> — 相城区，京沪高铁，地铁 2 号线</li><li><strong>苏州新区站</strong> — 近高新区，有轨电车接驳</li><li><strong>苏州园区站</strong> — 紧邻金鸡湖，通勤沪苏首选</li></ul>'}
+            ],
+            'living': [
+                {title:'🛒 日常采买',key:'living_shopping',html:'<ul><li><strong>超市</strong> — 盒马鲜生（配送快）、山姆会员店（仓储式）、大润发（品类全）</li><li><strong>菜场</strong> — 葑门横街（最地道）、新民桥菜场、彩香一村菜场</li><li><strong>线上买菜</strong> — 叮咚买菜、美团买菜、朴朴超市，最快 30 分钟送达</li><li><strong>便利店</strong> — 全家、罗森、好德，街头随处可见</li></ul>'},
+                {title:'📞 常用服务电话',key:'living_phones',html:'<ul><li>自来水公司 — 65111515</li><li>国家电网 — 95598</li><li>苏州燃气 — 68261319</li><li>苏州有线电视 — 96296</li><li>市民服务热线 — 12345（综合咨询/投诉）</li><li>苏州火车站 — 12306</li><li>苏州公交服务 — 96196</li></ul>'},
+                {title:'💧 水电燃气缴费',key:'living_bills',html:'<ul><li>支付宝 — 搜索"生活缴费"，绑定户号即可缴纳</li><li>微信 — 我 → 服务 → 生活缴费</li><li><strong>"苏周到" App</strong> — 统一平台，可查账单记录</li><li>线下 — 各街道社区服务中心、银行代扣</li></ul>'},
+                {title:'📦 快递与物流',key:'living_delivery',html:'<ul><li>菜鸟驿站 — 小区标配，取件方便</li><li>顺丰/京东 — 上门取件，App 预约</li><li>邮政 — 覆盖最广，乡镇也可达</li></ul>'}
+            ],
+            'emergency': [
+                {title:'🏥 主要医院',key:'emergency_hospitals',html:'<ul><li><strong>苏州大学附属第一医院</strong>（十梓街/平海路）— 综合三甲</li><li><strong>苏州市立医院</strong>（道前街）— 三甲，妇产/儿科突出</li><li><strong>苏州九龙医院</strong>（园区）— 三甲，园区首选</li><li><strong>苏州大学附属儿童医院</strong>（园区/景德路）— 三甲，儿科专科</li><li><strong>苏州市中医医院</strong>（沧浪新城）— 三甲，中医调理</li><li><strong>社区卫生服务中心</strong> — 各街道均设，小病就近</li></ul>'},
+                {title:'🚑 应急电话',key:'emergency_phones',html:'<ul><li>急救中心 — <strong>120</strong></li><li>火警 — <strong>119</strong></li><li>报警 — <strong>110</strong></li><li>交通事故 — <strong>122</strong></li><li>水上救援 — <strong>12395</strong></li><li>天然气泄漏 — <strong>68261319</strong></li><li>心理援助热线 — <strong>12320-5</strong></li></ul>'},
+                {title:'🧰 家庭常备药建议',key:'emergency_medicine',html:'<ul><li>创可贴/碘伏/医用纱布 — 外伤处理</li><li>布洛芬 — 退烧/止痛</li><li>蒙脱石散 — 止泻</li><li>氯雷他定 — 过敏</li><li>藿香正气水 — 中暑/肠胃不适</li><li>口罩/体温计/酒精湿巾 — 日常防护</li></ul>'},
+                {title:'🌙 夜间/急诊指引',key:'emergency_night',html:'<ul><li>各大三甲医院均设 <strong>24 小时急诊</strong></li><li>夜间购药 — 海王星辰等 <strong>24 小时药店</strong></li><li>美团买药 — 夜间配送，30 分钟到</li><li>紧急情况直接拨打 120</li></ul>'}
+            ],
+            'policy': [
+                {title:'🏡 人才租房/购房补贴',key:'policy_housing',html:'<ul><li><strong>人才乐居工程</strong> — 本科以上在苏就业，可申领 400-800 元/月租房补贴</li><li><strong>姑苏领军人才</strong> — 最高 100 万安家补贴</li><li><strong>园区人才补贴</strong> — 硕博 3 万/5 万购房补贴</li><li><strong>高新区人才公寓</strong> — 租金市场价 7 折</li></ul>'},
+                {title:'💼 就业创业补贴',key:'policy_job',html:'<ul><li><strong>一次性创业补贴</strong> — 毕业 5 年内创业可领 1 万元</li><li><strong>社保补贴</strong> — 灵活就业人员补贴 50%</li><li><strong>小微企业吸纳补贴</strong> — 每人 2000 元</li></ul>'},
+                {title:'🏨 "苏青驿站" 免费住宿',key:'policy_youth',html:'<ul><li>来苏求职应届生可申请 <strong>免费住宿</strong>（最长 14 天）</li><li>全市 20+ 站点，"苏周到" App 申请</li></ul>'},
+                {title:'🔍 查询渠道',key:'policy_channels',html:'<ul><li><strong>"苏周到" App</strong> — 统一入口</li><li><strong>12333</strong> — 人社热线</li></ul>'}
+            ],
+            'travel': [
+                {title:'🏯 经典园林',key:'travel_gardens',html:'<ul><li><strong>拙政园</strong> — 最大园林，80 元</li><li><strong>留园</strong> — 55 元</li><li><strong>狮子林</strong> — 40 元</li><li><strong>沧浪亭</strong> — 20 元</li><li><strong>网师园</strong> — 40 元</li><li>💡 园林年卡 120 元/年无限次</li></ul>'},
+                {title:'🌿 自然风光',key:'travel_nature',html:'<ul><li><strong>金鸡湖</strong> — 骑行/音乐喷泉</li><li><strong>独墅湖</strong> — 教堂+日落</li><li><strong>太湖 · 东山</strong> — 环湖/摘枇杷</li><li><strong>太湖 · 西山</strong> — 明月湾古村</li><li><strong>上方山</strong> — 樱花季</li><li><strong>阳澄湖</strong> — 大闸蟹</li></ul>'},
+                {title:'🏘️ 古镇古街',key:'travel_towns',html:'<ul><li><strong>平江路</strong> — 历史老街</li><li><strong>山塘街</strong> — 夜景绝美</li><li><strong>周庄</strong> — 中国第一水乡</li><li><strong>同里</strong> — 退思园</li><li><strong>甪直</strong> — 原生态</li></ul>'},
+                {title:'🎭 文化体验',key:'travel_culture',html:'<ul><li><strong>苏州博物馆</strong> — 贝聿铭封山之作，免费</li><li><strong>诚品书店</strong> — 文化地标</li><li><strong>昆曲/评弹</strong> — 山塘街茶馆</li></ul>'},
+                {title:'🗓️ 一日游路线',key:'travel_routes',html:'<p><strong>路线A（文化线）</strong><br/>苏博 → 拙政园 → 平江路 → 狮子林 → 山塘街</p><p><strong>路线B（休闲线）</strong><br/>金鸡湖骑行 → 诚品 → 独墅湖日落</p><p><strong>路线C（古镇线）</strong><br/>周庄一日游</p>'}
+            ]
+        };
+        if (tmpl[sectionId]) return tmpl[sectionId];
+
+        // 自定义板块默认模板
+        const sec = userData?.sections?.find(s => s.id === sectionId);
+        return [
+            {title:'📌 关于' + (sec?.title || '此板块'), key:sectionId+'_about', html:'<p>这是 <strong>' + (sec?.title || '此板块') + '</strong> 的内容区域。点击此处编辑。</p>'},
+            {title:'📝 实用信息', key:sectionId+'_info', html:'<ul><li>添加实用信息</li><li>支持列表和文字</li></ul>'},
+            {title:'💡 小贴士', key:sectionId+'_tips', html:'<p>自由编辑内容 ✍️</p>'}
+        ];
+    }
+
+    /* ===== 渲染网格 ===== */
+    function renderGrid() {
+        const list = userData?.sections || [];
+        if (list.length === 0) {
+            $grid.innerHTML = `<div class="empty-state"><div class="big-icon">📂</div><p>还没有板块，点击下方「+」添加</p></div>`;
+            return;
+        }
+        let html = '';
+        list.forEach((sec, idx) => {
+            const cc = iconColors[idx % iconColors.length];
+            const tagsHtml = (sec.tags||[]).map(t => `<span class="tag">${t}</span>`).join('');
+            html += `<div class="card" data-id="${sec.id}">
+                <button class="del-btn" data-id="${sec.id}" title="删除板块">✕</button>
+                <div class="click-area" data-id="${sec.id}">
+                    <div class="icon-row"><div class="icon-badge ${cc}">${sec.icon}</div>
+                    <div class="card-title" contenteditable="false" data-edit-field="title">${sec.title}</div></div>
+                    <div class="card-summary" contenteditable="false" data-edit-field="summary">${sec.summary}</div>
+                    <div class="tags">${tagsHtml}</div>
+                    <div class="arrow">点击进入 →</div>
+                </div></div>`;
+        });
+        html += `<div class="add-card-btn" id="addCardBtn"><span class="plus">+</span> 新增板块</div>`;
+        $grid.innerHTML = html;
+
+        applyGridEditState();
+
+        document.querySelectorAll('.click-area').forEach(el => {
+            el.addEventListener('click', (e) => {
+                if (e.target.contentEditable === 'true') return;
+                if (el.dataset.id) openDetail(el.dataset.id);
+            });
+        });
+
+        document.querySelectorAll('.del-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!canEdit()) { showToast('⚠️ 你没有编辑权限'); return; }
+                deleteSection(btn.dataset.id);
+            });
+        });
+        document.querySelectorAll('.del-btn').forEach(b => b.classList.toggle('show', editing && canEdit()));
+
+        const addBtn = document.getElementById('addCardBtn');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                if (!canEdit()) { showToast('⚠️ 你没有编辑权限'); return; }
+                openModal();
+            });
+        }
+
+        document.querySelectorAll('[data-edit-field]').forEach(el => {
+            el.addEventListener('blur', () => saveGridEdits());
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+            });
+        });
+    }
+
+    function saveGridEdits() {
+        const list = userData?.sections || [];
+        document.querySelectorAll('.card').forEach(cardEl => {
+            const id = cardEl.dataset.id;
+            const tEl = cardEl.querySelector('[data-edit-field="title"]');
+            const sEl = cardEl.querySelector('[data-edit-field="summary"]');
+            const item = list.find(s => s.id === id);
+            if (item) {
+                if (tEl) item.title = tEl.textContent.trim() || item.title;
+                if (sEl) item.summary = sEl.textContent.trim() || item.summary;
+            }
+        });
+        scheduleSave();
+    }
+
+    function deleteSection(id) {
+        if (!confirm('确认删除此板块？')) return;
+        if (!userData) return;
+        userData.sections = userData.sections.filter(s => s.id !== id);
+        if (userData.details) delete userData.details[id];
+        scheduleSave();
+        renderGrid();
+        showToast('已删除板块');
+    }
+
+    /* ===== 弹窗 ===== */
+    function openModal() {
+        $modal.classList.add('show');
+        $modalName.value = '';
+        $modalDesc.value = '';
+        selectedEmoji = '📋';
+        document.querySelectorAll('#emojiGrid span').forEach(el => el.classList.toggle('selected', el.dataset.emoji === selectedEmoji));
+        $modalName.focus();
+    }
+    function closeModal() { $modal.classList.remove('show'); }
+
+    $emojiGrid.addEventListener('click', (e) => {
+        const s = e.target.closest('span');
+        if (!s) return;
+        selectedEmoji = s.dataset.emoji;
+        document.querySelectorAll('#emojiGrid span').forEach(el => el.classList.remove('selected'));
+        s.classList.add('selected');
+    });
+    $modalCan.addEventListener('click', closeModal);
+    $modal.addEventListener('click', (e) => { if (e.target === $modal) closeModal(); });
+    $modalCfm.addEventListener('click', () => {
+        const name = $modalName.value.trim();
+        const desc = $modalDesc.value.trim();
+        if (!name) { showToast('请输入板块名称'); return; }
+        const id = 'sec_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+        if (!userData) userData = { sections: [], details: {} };
+        userData.sections.push({ id, icon: selectedEmoji, title: name, summary: desc || '点击编辑详情', tags: [] });
+        scheduleSave();
+        closeModal();
+        renderGrid();
+        showToast('✅ 已添加「' + name + '」');
+        setTimeout(() => openDetail(id), 400);
+    });
+
+    /* ===== 详情 ===== */
+    function openDetail(sectionId) {
+        const list = userData?.sections || [];
+        const sec = list.find(s => s.id === sectionId);
+        if (!sec) return;
+
+        currentSection = sectionId;
+        $gridView.classList.add('hide');
+        $detailView.classList.add('show');
+        $backBtn.classList.add('show');
+        $heroTitle.textContent = sec.icon + ' ' + sec.title;
+        $heroDesc.textContent = canEdit() ? '点击下方内容即可编辑 · 修改自动保存' : '👁️ 仅查看模式';
+
+        const blocks = getDetailBlocks(sectionId);
+        let html = `<div class="section-title">${sec.icon} ${sec.title}</div>`;
+        blocks.forEach(b => {
+            html += `<div class="block">
+                <h3 contenteditable="${canEdit() && editing}" class="block-title" data-block-key="${b.key}">${b.title}</h3>
+                <div class="editable" data-key="${b.key}">${b.html}</div>
+            </div>`;
+        });
+        html += `<div class="detail-tip">${canEdit() ? '✎ 点击内容编辑 · Ctrl+E 切换编辑' : '👁️ 仅查看模式'}</div>`;
+        $detailCont.innerHTML = html;
+        applyDetailEditState();
+        bindDetailEvents(sectionId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBack() {
+        if (currentSection) saveDetailContent(currentSection);
+        currentSection = null;
+        $gridView.classList.remove('hide');
+        $detailView.classList.remove('show');
+        $backBtn.classList.remove('show');
+        $heroTitle.textContent = '苏州生活服务手册';
+        $heroDesc.textContent = '租房 · 餐饮 · 交通 · 生活 · 应急 · 政策 · 游玩  —  点击板块进入详情';
+        renderGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function saveDetailContent(sectionId) {
+        if (!canEdit()) return;
+        const blocks = [];
+        document.querySelectorAll('.block').forEach(blk => {
+            const tEl = blk.querySelector('.block-title');
+            const bEl = blk.querySelector('.editable');
+            if (tEl && bEl) {
+                blocks.push({
+                    title: tEl.textContent.trim() || '未命名',
+                    key: bEl.dataset.key || (sectionId + '_' + blocks.length),
+                    html: bEl.innerHTML
+                });
+            }
+        });
+        if (blocks.length > 0 && userData) {
+            if (!userData.details) userData.details = {};
+            userData.details[sectionId] = blocks;
+            scheduleSave();
+        }
+    }
+
+    let detTimer = null;
+    function bindDetailEvents(sectionId) {
+        document.querySelectorAll('.editable').forEach(el => {
+            el.addEventListener('input', () => {
+                clearTimeout(detTimer);
+                detTimer = setTimeout(() => saveDetailContent(sectionId), 400);
+            });
+        });
+        document.querySelectorAll('.block-title').forEach(el => {
+            el.addEventListener('blur', () => saveDetailContent(sectionId));
+            el.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+        });
+    }
+
+    /* ===== 编辑状态 ===== */
+    function setEditing(on) {
+        if (on && !canEdit()) {
+            showToast('⚠️ 你没有编辑权限');
+            return;
+        }
+        editing = on;
+        $editToggle.textContent = on ? '✎ 编辑中…' : '✎ 编辑';
+        $editToggle.classList.toggle('active', on);
+        applyGridEditState();
+        applyDetailEditState();
+        document.querySelectorAll('.del-btn').forEach(b => b.classList.toggle('show', on && canEdit()));
+    }
+
+    function applyGridEditState() {
+        document.querySelectorAll('[data-edit-field]').forEach(el => {
+            el.contentEditable = (editing && canEdit()) ? 'true' : 'false';
+        });
+    }
+
+    function applyDetailEditState() {
+        const can = editing && canEdit();
+        document.querySelectorAll('.editable').forEach(el => { el.contentEditable = can ? 'true' : 'false'; });
+        document.querySelectorAll('.block-title').forEach(el => { el.contentEditable = can ? 'true' : 'false'; });
+    }
+
+    /* ===== 分享功能 ===== */
+    function closeShareMenu() { $shareMenu.classList.remove('show'); }
+
+    $shareToggle.addEventListener('click', (e) => { e.stopPropagation(); $shareMenu.classList.toggle('show'); });
+    document.addEventListener('click', (e) => {
+        if (!$shareToggle.contains(e.target) && !$shareMenu.contains(e.target)) closeShareMenu();
+    });
+
+    // 导出
+    $exportBtn.addEventListener('click', () => {
+        closeShareMenu();
+        if (!userData) { showToast('暂无数据'); return; }
+        const blob = new Blob([JSON.stringify(userData, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '生活手册_' + new Date().toISOString().slice(0,10) + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('✅ 导出成功');
+    });
+
+    // 导入
+    $importBtn.addEventListener('click', () => { closeShareMenu(); $importInput.click(); });
+    $importInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (!data.sections || !Array.isArray(data.sections)) {
+                    showToast('❌ 文件格式不正确'); return;
+                }
+                userData = { sections: data.sections, details: data.details || {} };
+                saveLocalBackup();
+                if (currentSection) goBack();
+                renderGrid();
+                scheduleSave();
+                showToast('✅ 导入成功，' + data.sections.length + ' 个板块');
+            } catch(err) { showToast('❌ 导入失败：' + err.message); }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    });
+
+    // 刷新
+    $refreshBtn.addEventListener('click', () => {
+        closeShareMenu();
+        if (localStorage.getItem('lg_token')) {
+            loadRemoteData();
+        } else {
+            loadLocalData();
+        }
+    });
+
+    // 退出
+    $logoutBtn.addEventListener('click', () => {
+        closeShareMenu();
+        localStorage.removeItem('lg_token');
+        userRole = null;
+        userData = null;
+        $userBadge.classList.remove('show');
+        $readonlyBanner.classList.remove('show');
+        showLogin();
+    });
+
+    // 复制链接
+    $shareLinkBtn.addEventListener('click', () => {
+        closeShareMenu();
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('✅ 链接已复制：' + url);
+        }).catch(() => {
+            showToast('📋 链接：' + url);
+        });
+    });
+
+    /* ===== 快捷键 ===== */
+    $backBtn.addEventListener('click', goBack);
+    $editToggle.addEventListener('click', () => setEditing(!editing));
+
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+            e.preventDefault();
+            setEditing(!editing);
+        }
+        if (e.key === 'Escape') {
+            closeShareMenu();
+            if (currentSection) goBack();
+        }
+    });
+
+    /* ===== 初始化：先检查登录 ===== */
+    checkLogin();
+    console.log('🌿 苏州生活手册 — 协作版已加载');
+
+})();
+</script>
+</body>
+</html>
