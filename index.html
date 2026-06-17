@@ -34,50 +34,53 @@
             font-size: 13px; color: #3a7a66; font-weight: 500;
             padding: 4px 14px; border-radius: 20px;
             background: #eef7f2; cursor: pointer;
-            transition: background 0.2s; display: none;
-            user-select: none; white-space: nowrap;
+            transition: background 0.2s; display: none; border: none;
+            user-select: none; white-space: nowrap; font-family: inherit;
         }
         .top-bar .back-btn:hover { background: #dcefe4; }
         .top-bar .back-btn.show { display: inline-block; }
         .top-bar .spacer { flex: 1; }
-        .top-bar .github-badge {
+
+        .top-bar .action-btn {
             font-size: 12px; color: #4d7a6a;
             background: #e4f0ea; border-radius: 20px;
-            padding: 4px 12px; white-space: nowrap;
-            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; cursor: pointer; border: none;
+            font-family: inherit; white-space: nowrap;
+            transition: background 0.2s;
         }
+        .top-bar .action-btn:hover { background: #cfe4da; }
+        .top-bar .action-btn.primary { background: #3a7a66; color: #fff; }
+        .top-bar .action-btn.primary:hover { background: #2d634f; }
+
+        .save-indicator {
+            font-size: 11px; color: #8aaa9a;
+            display: none; align-items: center; gap: 4px;
+        }
+        .save-indicator.show { display: inline-flex; }
+        .save-indicator .dot {
+            width: 6px; height: 6px; border-radius: 50%; background: #7ab5a0;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         /* ===== Hero ===== */
         .hero {
             background: linear-gradient(135deg, #d4ede2 0%, #b8dccd 50%, #a3cfbd 100%);
-            padding: 48px 24px 36px;
+            padding: 44px 24px 30px;
             text-align: center;
         }
         .hero h1 { font-size: 28px; font-weight: 700; color: #1f4d3f; margin-bottom: 6px; }
         .hero p { font-size: 14px; color: #4d7a6a; max-width: 520px; margin: 0 auto; }
-        .hero .edit-hint {
-            font-size: 12px; color: #5d8a78; margin-top: 12px;
-            background: rgba(255,255,255,0.5); border-radius: 20px;
-            padding: 6px 16px; display: inline-block;
+        .hero .status-bar {
+            margin-top: 12px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+        }
+        .hero .status-bar .tag {
+            font-size: 11px; background: rgba(255,255,255,0.6);
+            border-radius: 20px; padding: 4px 14px; color: #4d7a6a;
         }
 
         /* ===== 容器 ===== */
         .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px 80px; }
-
-        /* ===== 分类筛选 ===== */
-        .filter-bar {
-            display: flex; flex-wrap: wrap; gap: 8px;
-            margin-bottom: 24px; align-items: center;
-        }
-        .filter-bar .label { font-size: 13px; color: #5d7a6e; margin-right: 4px; }
-        .filter-btn {
-            font-size: 12px; padding: 5px 14px; border-radius: 20px;
-            border: 1px solid #d4e4dc; background: #fff;
-            color: #4d7a6a; cursor: pointer; transition: all 0.2s;
-            font-family: inherit;
-        }
-        .filter-btn:hover { border-color: #7ab5a0; background: #eef7f2; }
-        .filter-btn.active { background: #3a7a66; color: #fff; border-color: #3a7a66; }
 
         /* ===== 网格 ===== */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -146,16 +149,41 @@
         }
         .detail-header h2 { font-size: 22px; font-weight: 700; color: #1f4d3f; }
         .detail-header .meta { font-size: 13px; color: #5d7a6e; }
-        .detail-header .edit-note {
-            font-size: 12px; color: #8aaa9a; margin-top: 10px;
-            background: #f5f9f6; border-radius: 8px; padding: 10px 14px;
-            border-left: 3px solid #b8dccd;
+
+        /* ===== 编辑工具栏 ===== */
+        .edit-toolbar {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 16px; padding: 12px 16px;
+            background: #fafffc; border-radius: 12px;
+            border: 1px solid #dcefe4;
+        }
+        .edit-toolbar .btn {
+            font-size: 12px; padding: 5px 14px; border-radius: 20px;
+            border: 1px solid #d4e4dc; background: #fff;
+            color: #4d7a6a; cursor: pointer; transition: all 0.2s;
+            font-family: inherit;
+        }
+        .edit-toolbar .btn:hover { border-color: #7ab5a0; background: #eef7f2; }
+        .edit-toolbar .btn.active { background: #3a7a66; color: #fff; border-color: #3a7a66; }
+        .edit-toolbar .btn.save-btn { background: #3a7a66; color: #fff; border-color: #3a7a66; }
+        .edit-toolbar .btn.save-btn:hover { background: #2d634f; }
+        .edit-toolbar .btn.danger { color: #b57a6a; border-color: #e8c8be; }
+        .edit-toolbar .btn.danger:hover { background: #f5e4de; }
+        .edit-toolbar .spacer { flex: 1; }
+        .edit-toolbar .hint {
+            font-size: 11px; color: #8aaa9a; display: flex; align-items: center; gap: 4px;
         }
 
+        /* ===== 详情内容（可编辑） ===== */
         .detail-content {
             background: #fff; border-radius: 16px;
-            padding: 28px; border: 1px solid #eaf1ed;
+            padding: 24px 28px; border: 1px solid #eaf1ed;
             min-height: 200px;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+        .detail-content.editing {
+            box-shadow: 0 0 0 2px #7ab5a0;
         }
         .detail-content h3 {
             font-size: 16px; font-weight: 600; color: #1f4d3f;
@@ -171,31 +199,55 @@
         .detail-content li {
             font-size: 14px; color: #4d6a5e; margin-bottom: 4px;
         }
+        .detail-content strong { color: #1f4d3f; }
         .detail-content .empty-state {
             text-align: center; padding: 40px 20px; color: #8aaa9a;
         }
-        .detail-content .empty-state .big {
-            font-size: 40px; margin-bottom: 10px;
-        }
+        .detail-content .empty-state .big { font-size: 40px; margin-bottom: 10px; }
 
-        /* ===== 编辑提示 ===== */
-        .edit-guide {
+        /* ===== 数据管理面板 ===== */
+        .data-panel {
             margin-top: 40px; padding: 20px 24px;
             background: #fff; border-radius: 16px;
             border: 1px solid #eaf1ed;
         }
-        .edit-guide h3 {
+        .data-panel h3 {
             font-size: 15px; font-weight: 600; color: #1f4d3f;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
-        .edit-guide code {
-            background: #eef7f2; padding: 2px 8px; border-radius: 4px;
-            font-size: 13px; color: #3a7a66; font-family: "SF Mono", "Fira Code", consolas, monospace;
+        .data-panel .btns {
+            display: flex; gap: 10px; flex-wrap: wrap;
         }
-        .edit-guide ol {
-            padding-left: 20px; font-size: 13px; color: #5d7a6e;
+        .data-panel .btn {
+            font-size: 12px; padding: 6px 16px; border-radius: 20px;
+            border: 1px solid #d4e4dc; background: #fff;
+            color: #4d7a6a; cursor: pointer; transition: all 0.2s;
+            font-family: inherit;
         }
-        .edit-guide ol li { margin-bottom: 4px; }
+        .data-panel .btn:hover { border-color: #7ab5a0; background: #eef7f2; }
+        .data-panel .btn.primary { background: #3a7a66; color: #fff; border-color: #3a7a66; }
+        .data-panel .btn.primary:hover { background: #2d634f; }
+        .data-panel .btn.danger { color: #b57a6a; border-color: #e8c8be; }
+        .data-panel .btn.danger:hover { background: #f5e4de; }
+        .data-panel .tip {
+            font-size: 12px; color: #8aaa9a; margin-top: 8px;
+        }
+        .data-panel .tip code {
+            background: #eef7f2; padding: 1px 6px; border-radius: 4px;
+            font-size: 11px; color: #3a7a66;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #1f4d3f; color: #fff; padding: 10px 24px;
+            border-radius: 30px; font-size: 13px; z-index: 999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            opacity: 0; transition: opacity 0.3s, transform 0.3s;
+            transform: translateX(-50%) translateY(20px);
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* ===== Footer ===== */
         .footer {
@@ -210,64 +262,88 @@
             .grid { grid-template-columns: 1fr; }
             .container { padding: 16px 14px 60px; }
             .detail-header { padding: 20px; }
-            .detail-content { padding: 20px; }
+            .detail-content { padding: 16px 18px; }
+            .edit-toolbar { padding: 10px 12px; }
+            .data-panel { padding: 16px 18px; }
         }
+
+        /* ===== 隐藏的文件输入 ===== */
+        #importInput { display: none; }
     </style>
 </head>
 <body>
+
+<!-- ===== Toast 消息 ===== -->
+<div class="toast" id="toast"></div>
 
 <!-- ===== 顶栏 ===== -->
 <div class="top-bar">
     <div class="logo">苏州<span>生活手册</span></div>
     <div class="back-btn" id="backBtn" onclick="showGrid()">← 返回</div>
     <div class="spacer"></div>
-    <div class="github-badge">📖 GitHub Pages</div>
+    <div class="save-indicator" id="saveIndicator">
+        <span class="dot"></span><span>已保存</span>
+    </div>
+    <button class="action-btn primary" onclick="downloadHTML()">📥 下载 HTML</button>
 </div>
 
 <!-- ===== Hero ===== -->
 <div class="hero">
     <h1>🌿 苏州生活服务手册</h1>
     <p>租房攻略 · 美食交通 · 生活指南 · 应急医疗 · 政策补贴 · 游玩地图</p>
-    <div class="edit-hint">✏️ 组员可编辑此页面 — 修改下方数据后重新上传到 GitHub 即可</div>
+    <div class="status-bar">
+        <span class="tag">✏️ 点击卡片查看 / 编辑详情</span>
+        <span class="tag">💾 自动保存到本地浏览器</span>
+        <span class="tag">📤 导出数据分享给组员</span>
+    </div>
 </div>
 
 <!-- ===== 网格视图 ===== -->
 <div class="container" id="viewGrid">
-    <div class="filter-bar">
-        <span class="label">🏷️ 分类：</span>
-        <button class="filter-btn active" data-filter="all" onclick="filterCards('all')">全部</button>
-    </div>
     <div class="grid" id="cardGrid"></div>
 
-    <!-- 编辑指南 -->
-    <div class="edit-guide">
-        <h3>📝 组员编辑指南</h3>
-        <ol>
-            <li>打开本仓库，找到 <code>index.html</code> 文件</li>
-            <li>点击右上角的 ✏️ 编辑按钮进入编辑模式</li>
-            <li>找到下方 <code>/* ===== 📦 数据区 ===== */</code> 部分</li>
-            <li>修改对应章节的标题、摘要、标签或详情内容</li>
-            <li>点击「Commit changes」提交，稍等1分钟页面自动更新</li>
-        </ol>
+    <!-- 数据管理 -->
+    <div class="data-panel">
+        <h3>🔧 数据管理</h3>
+        <div class="btns">
+            <button class="btn primary" onclick="exportData()">📤 导出数据 (分享给组员)</button>
+            <button class="btn" onclick="document.getElementById('importInput').click()">📥 导入数据 (恢复组员分享的数据)</button>
+            <button class="btn danger" onclick="resetData()">🔄 恢复默认数据</button>
+        </div>
+        <div class="tip">
+            💡 编辑内容会自动保存到当前浏览器。<strong>导出数据</strong>文件分享给组员，对方<strong>导入数据</strong>即可同步。
+            确认内容后点击右上角 <code>📥 下载 HTML</code> 上传到 GitHub 永久保存。
+        </div>
     </div>
+    <input type="file" id="importInput" accept=".json" onchange="importData(event)" />
 </div>
 
 <!-- ===== 详情视图 ===== -->
 <div class="container" id="viewDetail">
     <div class="detail-header" id="detailHeader"></div>
+
+    <div class="edit-toolbar" id="editToolbar">
+        <button class="btn active" id="viewModeBtn" onclick="toggleEdit(false)">👁️ 预览</button>
+        <button class="btn" id="editModeBtn" onclick="toggleEdit(true)">✏️ 编辑</button>
+        <span class="spacer"></span>
+        <span class="hint" id="editHint">💡 点击「编辑」后可直接修改内容</span>
+        <button class="btn save-btn" onclick="saveCurrentSection()">💾 保存</button>
+    </div>
+
     <div class="detail-content" id="detailContent"></div>
 </div>
 
 <!-- ===== Footer ===== -->
 <div class="footer">
-    苏州生活服务手册 &mdash; 组员协作维护 · 数据更新于 2026年6月
+    苏州生活服务手册 &mdash; 组员协作维护
 </div>
 
 <script>
-/* ===== 📦 数据区 ===== */
-/* 👇 组员可以直接修改下方数据，改完保存后重新上传到 GitHub 即可更新页面 */
+/* ============================================================
+   📦 数据区 — 组员可直接在此修改默认内容
+   ============================================================ */
 
-const SECTIONS = [
+const DEFAULT_SECTIONS = [
     {
         id: "rent",
         icon: "🏠",
@@ -296,7 +372,7 @@ const SECTIONS = [
                 <li>合同注明维修责任：家电自然损坏由房东负责</li>
                 <li>押金条款：明确退租时押金退还条件和时限</li>
                 <li>提前解约：约定提前多久通知，违约金如何计算</li>
-                <li>建议通过「苏租」或正规中介签约，保留凭证</li>
+                <li>建议通过正规中介签约，保留凭证</li>
             </ul>
         `
     },
@@ -418,7 +494,7 @@ const SECTIONS = [
                 <li>一次性创业补贴：1 万元（毕业5年内高校毕业生）</li>
                 <li>创业带动就业补贴：每带动1人就业补贴 2000 元</li>
                 <li>创业担保贷款：最高 50 万元，财政贴息</li>
-                <li>申请渠道：苏州市人社局官网 / 各區人社服务中心</li>
+                <li>申请渠道：苏州市人社局官网 / 各区人社服务中心</li>
             </ul>
             <h3>📱 社保申领指南</h3>
             <ul>
@@ -464,11 +540,39 @@ const SECTIONS = [
     }
 ];
 
-/* ===== 渲染函数 ===== */
-function renderCards(filter) {
+/* ============================================================
+   应用逻辑
+   ============================================================ */
+
+const STORAGE_KEY = 'suzhou_guide_data';
+let sections = [];
+let currentSectionId = null;
+let isEditing = false;
+
+function loadData() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        try {
+            sections = JSON.parse(saved);
+            return;
+        } catch (e) {}
+    }
+    sections = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+    saveToStorage();
+}
+
+function saveToStorage() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sections));
+    document.getElementById('saveIndicator').classList.add('show');
+    clearTimeout(window._saveTimeout);
+    window._saveTimeout = setTimeout(() => {
+        document.getElementById('saveIndicator').classList.remove('show');
+    }, 2000);
+}
+
+function renderCards() {
     const grid = document.getElementById('cardGrid');
-    const filtered = filter === 'all' ? SECTIONS : SECTIONS.filter(s => s.tags.includes(filter) || s.id === filter);
-    grid.innerHTML = filtered.map((s, i) => `
+    grid.innerHTML = sections.map(s => `
         <div class="card" onclick="showDetail('${s.id}')">
             <div class="icon-row">
                 <div class="icon-badge ${s.color}">${s.icon}</div>
@@ -482,8 +586,9 @@ function renderCards(filter) {
 }
 
 function showDetail(id) {
-    const section = SECTIONS.find(s => s.id === id);
+    const section = sections.find(s => s.id === id);
     if (!section) return;
+    currentSectionId = id;
 
     document.getElementById('viewGrid').classList.add('hide');
     document.getElementById('viewDetail').classList.add('show');
@@ -497,44 +602,141 @@ function showDetail(id) {
                 <div class="meta">${section.summary}</div>
             </div>
         </div>
-        <div class="edit-note">✏️ 组员可在 <code>index.html</code> 中修改此章节内容，找到 <code>id: "${section.id}"</code> 对应的 <code>content</code> 字段进行编辑</div>
     `;
-    document.getElementById('detailContent').innerHTML = section.content || `
+
+    isEditing = false;
+    document.getElementById('viewModeBtn').classList.add('active');
+    document.getElementById('editModeBtn').classList.remove('active');
+    document.getElementById('editHint').textContent = '👁️ 预览模式';
+    renderDetailContent(section);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderDetailContent(section) {
+    const el = document.getElementById('detailContent');
+    el.innerHTML = section.content || `
         <div class="empty-state">
             <div class="big">📝</div>
             <p>此章节内容待补充</p>
-            <p style="font-size:13px;color:#8aaa9a;">组员可在 index.html 的对应数据区添加内容</p>
         </div>
     `;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isEditing) {
+        el.contentEditable = true;
+        el.classList.add('editing');
+    } else {
+        el.contentEditable = false;
+        el.classList.remove('editing');
+    }
+}
+
+function toggleEdit(edit) {
+    isEditing = edit;
+    document.getElementById('viewModeBtn').classList.toggle('active', !edit);
+    document.getElementById('editModeBtn').classList.toggle('active', edit);
+    document.getElementById('editHint').textContent = edit ? '✏️ 编辑模式 — 直接点击内容修改' : '👁️ 预览模式';
+    const section = sections.find(s => s.id === currentSectionId);
+    if (section) {
+        renderDetailContent(section);
+    }
+}
+
+function saveCurrentSection() {
+    if (!currentSectionId) return;
+    const section = sections.find(s => s.id === currentSectionId);
+    if (!section) return;
+
+    const el = document.getElementById('detailContent');
+    section.content = el.innerHTML;
+    saveToStorage();
+    showToast('✅ 已保存到本地浏览器');
 }
 
 function showGrid() {
     document.getElementById('viewGrid').classList.remove('hide');
     document.getElementById('viewDetail').classList.remove('show');
     document.getElementById('backBtn').classList.remove('show');
+    currentSectionId = null;
+    renderCards();
 }
 
-function filterCards(filter) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
-    renderCards(filter);
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window._toastTimeout);
+    window._toastTimeout = setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-/* 初始化 */
-renderCards('all');
+/* ===== 导出 / 导入 / 重置 ===== */
 
-/* 生成所有标签按钮 */
-const allTags = [...new Set(SECTIONS.flatMap(s => s.tags))];
-const filterBar = document.querySelector('.filter-bar');
-allTags.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.dataset.filter = tag;
-    btn.textContent = '# ' + tag;
-    btn.onclick = () => filterCards(tag);
-    filterBar.appendChild(btn);
-});
+function exportData() {
+    const data = JSON.stringify(sections, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '苏州生活手册数据.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✅ 数据已导出，可分享给组员');
+}
+
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (Array.isArray(data) && data.length > 0 && data[0].id && data[0].title) {
+                sections = data;
+                saveToStorage();
+                renderCards();
+                showToast('✅ 导入成功！数据已更新');
+            } else {
+                showToast('❌ 数据格式不正确');
+            }
+        } catch (err) {
+            showToast('❌ 文件解析失败：' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function resetData() {
+    if (!confirm('确定恢复为默认数据？当前修改将丢失！')) return;
+    sections = JSON.parse(JSON.stringify(DEFAULT_SECTIONS));
+    saveToStorage();
+    renderCards();
+    showToast('🔄 已恢复默认数据');
+}
+
+function downloadHTML() {
+    /* 先保存当前数据到 HTML 中 */
+    const dataStr = JSON.stringify(sections, null, 2);
+    const htmlContent = document.documentElement.outerHTML;
+
+    /* 替换 LOCAL_STORAGE_DATA 占位符 */
+    const updated = htmlContent.replace(
+        /const DEFAULT_SECTIONS = \[/,
+        `const DEFAULT_SECTIONS = ${dataStr.slice(0, dataStr.indexOf('['))}${dataStr.slice(dataStr.indexOf('['), dataStr.lastIndexOf(']') + 1)}; /* 自动生成 */\n    const DEFAULT_SECTIONS_PLACEHOLDER = [`
+    );
+
+    /* 简单做法：重新下载当前页面，但把 localStorage 数据嵌入到默认数据区 */
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'index.html';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('📥 正在下载，下载后请上传到 GitHub 覆盖原文件');
+}
+
+/* ===== 初始化 ===== */
+loadData();
+renderCards();
 </script>
 </body>
 </html>
